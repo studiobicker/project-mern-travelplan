@@ -1,0 +1,16 @@
+@charset "utf-8";
+@import url("https://fonts.googleapis.com/css?family=Passion+One:700&display=swap");
+
+$family-secondary: "Passion One", cursive;
+$title-family: $family-secondary;
+$box-padding: 1.875rem;
+// Set your brand colors
+$teal: #0b576d;
+$green: #7ebf8a;
+
+// Update Bulma's global variables
+$family-sans-serif: "Nunito", sans-serif;
+$primary: $teal;
+$link: $green;
+
+@import "../../node_modules/bulma/bulma.sass";

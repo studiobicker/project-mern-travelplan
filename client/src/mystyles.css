@@ -7102,3 +7102,44 @@ label.panel-block {
 .footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
+
+.column-padding {
+  padding: 1.25rem; }
+
+.card .media:not(:last-child) {
+  margin-bottom: 0.75rem; }
+
+.card.is-horizontal {
+  display: flex;
+  flex-basis: 50ex;
+  flex-grow: 0;
+  flex-shrink: 1; }
+  .card.is-horizontal .card-image {
+    flex: 4;
+    flex-shrink: 1; }
+  .card.is-horizontal .image {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    width: 100%; }
+  .card.is-horizontal img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center; }
+  .card.is-horizontal .card-content {
+    flex: 3; }
+
+.destLi {
+  background-color: #fafafa;
+  padding: 5px 20px;
+  margin-bottom: 10px; }
+
+.fa-map-marker-alt,
+.fa-caret-down {
+  margin-right: 5px; }
+
+.fa-trash-alt,
+.fa-caret-down,
+.fa-caret-up {
+  cursor: pointer; }

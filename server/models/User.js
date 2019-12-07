@@ -27,7 +27,14 @@ const userSchema = new Schema({
     type: String,
     default:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/440px-SNice.svg.png"
-  }
+  },
+  trips: [
+    {
+      type: Schema.ObjectId,
+      ref: "Trip",
+      required: "You must supply a trip!"
+    }
+  ]
 });
 
 const User = mongoose.model("User", userSchema);

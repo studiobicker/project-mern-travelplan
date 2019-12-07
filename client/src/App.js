@@ -1,91 +1,99 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import NewTrip from "./pages/NewTrip";
+import BuildTrip from "./pages/BuildTrip";
 import PrivateRoute from "./components/PrivateRoute";
 import Loader from "./components/Loader";
 import AuthService from "./api/authService";
 import NavBar from "./components/NavBar";
-import Trip from "./pages/Trip";
 
 import "./App.css";
 
-const authService = new AuthService();
-
-function App() {
-  const [state, setState] = useState({ user: null, isLoadingUser: true });
-
-  //Component did mount is now use effect.
-  //Don't forget the second argument needs to be an empty array, so app won't get into an infinite loop.
-  useEffect(() => {
-    const getUser = async () => {
-      let user;
-      try {
-        //Making the actual API call.
-        user = await authService.isLoggedIn();
-        debugger;
-      } catch (err) {
-        debugger;
-        user = null;
-      } finally {
-        //Irregardless of the result we want to set state.
-        setUserState(user);
-      }
+export default class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      user: null,
+      isLoadingUser: true
     };
+    this.authService = new AuthService();
+  }
 
-    getUser();
-  }, []);
-
-  const setUserState = user => {
-    // If user is loggedIn state will be set with user,
-    // otherwise user will be null.
-    setState({ user, isLoadingUser: false });
-  };
-
-  const logout = async () => {
-    //destroy session.
+  componentDidMount = async () => {
+    let user;
     try {
-      await authService.logout();
+      user = await this.authService.isLoggedIn();
     } catch (err) {
-      console.log(err);
+      user = null;
     } finally {
-      setUserState(null);
+      this.setUserState(user);
     }
   };
 
-  // Initially we do not know yet whether an user is logged in or not so we just return a loader.
-  if (state.isLoadingUser) return <Loader className="full-screen-loader" />;
-  return (
-    <div className="App">
-      <NavBar user={state.user} logout={logout} />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route
-          path="/login"
-          render={props => <Login {...props} setUserState={setUserState} />}
-        />
-        <Route
-          path="/register"
-          render={props => <Register {...props} setUserState={setUserState} />}
-        />
-        <PrivateRoute
-          path="/dashboard"
-          user={state.user}
-          component={Dashboard}
-        />
-        <PrivateRoute
-          path="/profile"
-          user={state.user}
-          setUserState={setUserState}
-          component={Profile}
-        />
-        <PrivateRoute path="/add-trip" user={state.user} component={Trip} />
-      </Switch>
-    </div>
-  );
-}
+  setUserState = user => {
+    this.setState({ user, isLoadingUser: false });
+  };
 
-export default App;
+  logout = async () => {
+    let user;
+    try {
+      user = await this.authService.logout();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      this.setState({ user: null });
+    }
+  };
+  render() {
+    if (this.state.isLoadingUser)
+      return <Loader className="full-screen-loader" />;
+
+    return (
+      <div className="App">
+        <NavBar user={this.state.user} logout={this.logout} />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route
+            path="/login"
+            render={props => (
+              <Login {...props} setUserState={this.setUserState} />
+            )}
+          />
+          <Route
+            path="/register"
+            render={props => (
+              <Register {...props} setUserState={this.setUserState} />
+            )}
+          />
+          <PrivateRoute
+            path="/dashboard"
+            user={this.state.user}
+            setTripState={this.setTripState}
+            component={Dashboard}
+          />
+          <PrivateRoute
+            path="/profile"
+            user={this.state.user}
+            setUserState={this.setUserState}
+            component={Profile}
+          />
+          <PrivateRoute
+            path="/add-trip"
+            user={this.state.user}
+            component={NewTrip}
+          />
+          <Route
+            path="/build-trip/:id"
+            user={this.state.user}
+            component={BuildTrip}
+          />
+        </Switch>
+      </div>
+    );
+  }
+}

@@ -5,7 +5,6 @@ import { Route, Redirect } from "react-router-dom";
 // that expects a component, an user an other props.
 // the other props will be set in ...rest (the most important one will be the path definition (the path we see in the browser's navigation))
 const protectedRoute = ({ component: Component, user, ...rest }) => {
-  debugger;
   return (
     <Route
       render={props => {

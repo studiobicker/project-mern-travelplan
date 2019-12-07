@@ -13,6 +13,8 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const uploadRouter = require("./routes/upload");
+const tripRouter = require("./routes/trips");
+const destinationRouter = require("./routes/destinations");
 const protectedRouter = require("./routes/protected");
 
 const app = express();
@@ -59,6 +61,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/trip", protectedRouter, tripRouter);
+app.use("/api/trip/destination", protectedRouter, destinationRouter);
 app.use("/api/upload", protectedRouter, uploadRouter);
 
 // catch 404 and forward to error handler

@@ -17,10 +17,10 @@ const tripSchema = new Schema({
     ref: "User",
     required: "You must supply an author!"
   },
-  travelers: [
+  members: [
     {
       type: Schema.ObjectId,
-      ref: "User"
+      ref: "member"
     }
   ],
   invitations: [

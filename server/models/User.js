@@ -8,10 +8,9 @@ const checkEmail = email => {
 };
 
 const userSchema = new Schema({
-  username: {
+  name: {
     type: String,
-    unique: true,
-    required: "Username is required"
+    required: "Name is required"
   },
   email: {
     type: String,

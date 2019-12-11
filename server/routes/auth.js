@@ -6,8 +6,8 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10; // cost factor for producing the hash
 
 router.post("/register", async (req, res, next) => {
-  const { username, password, email, profilePicture } = req.body;
-  if (!username || !password || !email) {
+  const { name, email, password, profilePicture } = req.body;
+  if (!name || !password || !email) {
     res.status(400).json({ message: "Please provide credentials" });
     return false;
   }
@@ -16,12 +16,13 @@ router.post("/register", async (req, res, next) => {
     //encrpt password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = await User.create({
-      username,
+      name,
       password: hashedPassword,
       email,
       profilePicture
     });
     // dont send password back
+    req.session.user = newUser;
     res.status(200).json(newUser);
   } catch (err) {
     if (err.code === 11000) {
@@ -34,14 +35,15 @@ router.post("/register", async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    res.status(400).json({ message: "Login failed, please try again" });
+  const { email, password } = req.body;
+  debugger;
+  if (!email || !password) {
+    res.status(400).json({ message: "Please enter your login credentials" });
     return false;
   }
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (user) {
       const correctPassword = await bcrypt.compare(

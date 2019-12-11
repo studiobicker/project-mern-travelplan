@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import NewTrip from "./pages/NewTrip";
 import BuildTrip from "./pages/BuildTrip";
+import InvitePeople from "./pages/InvitePeople";
+import AcceptInvitation from "./pages/AcceptInvitation";
 import PrivateRoute from "./components/PrivateRoute";
 import Loader from "./components/Loader";
 import AuthService from "./api/authService";
@@ -91,6 +93,21 @@ export default class App extends Component {
             path="/build-trip/:id"
             user={this.state.user}
             component={BuildTrip}
+          />
+          <Route
+            path="/invite-people/:id"
+            user={this.state.user}
+            component={InvitePeople}
+          />
+          <Route
+            path="/invite/:task"
+            render={props => (
+              <AcceptInvitation
+                {...props}
+                user={this.state.user}
+                setUserState={this.setUserState}
+              />
+            )}
           />
         </Switch>
       </div>

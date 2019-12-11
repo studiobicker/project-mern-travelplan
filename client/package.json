@@ -9,6 +9,7 @@
     "concurrently": "^5.0.0",
     "deck.gl": "^7.3.6",
     "node-sass": "^4.13.0",
+    "query-string": "^6.9.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-map-gl": "^5.1.3",

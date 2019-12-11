@@ -5,16 +5,16 @@ export default function SideMenu({ tripId, ...props }) {
   debugger;
   return (
     <aside className="menu">
-      <p className="menu-label">Actions {tripId}</p>
+      <p className="menu-label">Actions</p>
       <ul className="menu-list">
         <li>
-          <Link to={`/build-trip/${props._id}`}>Build your trip</Link>
+          <Link to={`/build-trip/${tripId}`}>Build your trip</Link>
         </li>
         <li>
-          <Link to={`/invite-people/${props._id}`}>Invite people</Link>
+          <Link to={`/invite-people/${tripId}`}>Invite people</Link>
         </li>
         <li>
-          <Link>Write a message</Link>
+          <Link to={`/write-message/${tripId}`}>Write a message</Link>
         </li>
       </ul>
     </aside>

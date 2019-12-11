@@ -46,6 +46,7 @@ export default class BuildTrip extends Component {
 
   componentDidMount = async () => {
     const id = this.props.match.params.id;
+    debugger;
     try {
       const trip = await this.tripService.getTripById(id);
 
@@ -247,13 +248,14 @@ export default class BuildTrip extends Component {
                     />
                   </figure>
                 </div>
+
                 <div className="card-content">
                   <p className="is-size-5">
                     <strong>{this.state.trip.name}</strong>
                   </p>
                   <p>{this.state.trip.description}</p>
                   <br />
-                  <p className="is-size-5">
+                  <p>
                     <strong>Add a destination</strong>
                   </p>
                   <p className="is-size-7">

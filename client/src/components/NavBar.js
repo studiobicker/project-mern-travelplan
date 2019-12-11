@@ -24,7 +24,6 @@ export default class NavBar extends Component {
   };
 
   render() {
-    debugger;
     if (this.props.user) {
       return (
         <nav className="navbar has-shadow is-spaced">

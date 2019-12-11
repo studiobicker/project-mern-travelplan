@@ -2,8 +2,10 @@ import React from "react";
 
 export default function Loader({ className }) {
   return (
-    <div className={className}>
-      <div className="spinner"></div>
-    </div>
+    <section className="hero is-fullheight-with-navbar">
+      <div className="hero-body loader-container">
+        <div className="loader"></div>
+      </div>
+    </section>
   );
 }

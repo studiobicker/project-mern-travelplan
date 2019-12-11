@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import TripService from "../api/tripService";
 import Trip from "../components/Trip";
+import NothingFound from "../components/NothingFound";
 
 export default class Dashboard extends Component {
   constructor() {
     super();
     this.state = {
-      myTrips: [],
+      myTrips: null,
       loading: true
     };
     this.tripService = new TripService();
@@ -23,9 +24,14 @@ export default class Dashboard extends Component {
   };
 
   renderTrips = () => {
-    return this.state.myTrips.map((trip, i) => {
-      return <Trip key={i} {...trip} />;
-    });
+    debugger;
+    if (this.state.myTrips && this.state.myTrips.length > 0) {
+      return this.state.myTrips.map((trip, i) => {
+        return <Trip key={i} {...trip} />;
+      });
+    } else {
+      return <NothingFound />;
+    }
   };
 
   render() {
@@ -34,8 +40,7 @@ export default class Dashboard extends Component {
         <div className="container">
           {this.state.loading && <p>Loading...</p>}
           <div className="columns">
-            <div className="column">{this.renderTrips()}</div>
-            <div className="column"></div>
+            <div className="column is-half">{this.renderTrips()}</div>
           </div>
         </div>
       </section>

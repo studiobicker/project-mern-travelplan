@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import AuthService from "../api/authService";
+import RegisterForm from "../components/RegisterForm";
 
 export default function Register({ setUserState, history }) {
   const [err, setError] = useState(null);
   const [inputFields, setUser] = useState({
-    username: "",
+    name: "",
     password: "",
     email: ""
   });
@@ -15,7 +16,7 @@ export default function Register({ setUserState, history }) {
     try {
       const user = await authService.register(inputFields);
       setUserState(user);
-      history.push("/profile");
+      history.push("/dashboard");
     } catch (err) {
       const { message } = err.response.data;
       setError(message);
@@ -32,70 +33,13 @@ export default function Register({ setUserState, history }) {
     <section className="section">
       <div className="columns is-centered">
         <div className="column is-one-third">
-          <form onSubmit={onSubmitHandler}>
-            <div className="box">
-              <div className="field">
-                <label className="label" htmlFor="username">
-                  Username
-                </label>
-                <div className="control has-icons-left has-icons-right">
-                  <input
-                    className="input"
-                    type="text"
-                    placeholder="Username"
-                    name="username"
-                    onChange={onChangeHandler}
-                    required
-                  />
-                  <span className="icon is-small is-left">
-                    <i className="fas fa-user"></i>
-                  </span>
-                </div>
-              </div>
-              <div className="field">
-                <label className="label" htmlFor="password">
-                  Password
-                </label>
-                <div className="control has-icons-left">
-                  <input
-                    className="input"
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    onChange={onChangeHandler}
-                    required
-                  />
-                  <span className="icon is-small is-left">
-                    <i className="fas fa-lock"></i>
-                  </span>
-                </div>
-              </div>
-              <div className="field">
-                <label className="label" htmlFor="email">
-                  Email
-                </label>
-                <div className="control has-icons-left ">
-                  <input
-                    className="input"
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    onChange={onChangeHandler}
-                    required
-                  />
-                  <span className="icon is-small is-left">
-                    <i className="fas fa-envelope"></i>
-                  </span>
-                </div>
-              </div>
-              <div className="field is-grouped is-grouped-right">
-                <div className="control">
-                  <button className="button is-link">Sign up</button>
-                </div>
-              </div>
-            </div>
+          <div className="box">
+            <RegisterForm
+              onSubmitHandler={onSubmitHandler}
+              onChangeHandler={onChangeHandler}
+            />
             {err && <code className="is-error">{err}</code>}
-          </form>
+          </div>
         </div>
       </div>
     </section>

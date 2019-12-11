@@ -27,6 +27,39 @@ export default class tripService {
     return data;
   };
 
+  getInvitations = async id => {
+    const { data } = await this.service.get(
+      `trip/invitation/getTripInvitations/${id}`
+    );
+    return data;
+  };
+
+  sendInvitation = async (payload, id) => {
+    const email = payload;
+    const { data } = await this.service.post(`trip/invitation/send/${id}`, {
+      email
+    });
+    return data;
+  };
+
+  deleteInvitation = async (payload, id) => {
+    const invitationId = payload;
+    const { data } = await this.service.post(`trip/invitation/remove/${id}`, {
+      invitationId
+    });
+    return data;
+  };
+
+  getInvitation = async id => {
+    const { data } = await this.service.get(`public/getInvitation/${id}`);
+    return data;
+  };
+
+  acceptInvitation = async id => {
+    const { data } = await this.service.get(`trip/invitation/accept/${id}`);
+    return data;
+  };
+
   addDestination = async (payload, id) => {
     const { name, latitude, longitude } = payload;
     const { data } = await this.service.post(`trip/destination/add/${id}`, {

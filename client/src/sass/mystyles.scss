@@ -3,6 +3,7 @@
 
 $family-secondary: "Passion One", cursive;
 $title-family: $family-secondary;
+$subtitle-weight: 600;
 $box-padding: 1.875rem;
 // Set your brand colors
 $teal: #0b576d;
@@ -12,7 +13,7 @@ $section-padding: 3rem 1.5rem;
 $column-padding: 1.25rem;
 
 // Update Bulma's global variables
-$family-sans-serif: "Nunito", sans-serif;
+
 $primary: $teal;
 $link: $green;
 
@@ -64,7 +65,16 @@ $dimensions: 256 !default;
   padding: 5px 20px;
   margin-bottom: 10px;
 }
-
+.memberLi {
+  margin-bottom: 5px;
+}
+.deleteMember {
+  margin-left: 20px;
+  display: none;
+}
+.memberLi:hover .deleteMember {
+  display: initial;
+}
 .fa-map-marker-alt,
 .fa-caret-down {
   margin-right: 5px;
@@ -73,4 +83,27 @@ $dimensions: 256 !default;
 .fa-caret-down,
 .fa-caret-up {
   cursor: pointer;
+}
+
+.loader-container {
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.loader {
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid $teal;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

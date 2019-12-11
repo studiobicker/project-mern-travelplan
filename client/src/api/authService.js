@@ -9,20 +9,20 @@ export default class authService {
   }
 
   login = async payload => {
-    const { username, password } = payload;
+    const { email, password } = payload;
     const { data } = await this.service.post("auth/login", {
-      username,
+      email,
       password
     });
     return data;
   };
 
   register = async payload => {
-    const { username, password, email } = payload;
+    const { name, email, password } = payload;
     const { data } = await this.service.post("auth/register", {
-      username,
-      password,
-      email
+      name,
+      email,
+      password
     });
     return data;
   };

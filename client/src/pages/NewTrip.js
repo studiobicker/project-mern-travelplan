@@ -72,7 +72,9 @@ export default class NewTrip extends Component {
                     </div>
                   </div>
                 </div>
-                {this.err && <code className="is-error">{this.err}</code>}
+                {this.state.err && (
+                  <code className="is-error">{this.state.err}</code>
+                )}
               </form>
             </div>
           </div>

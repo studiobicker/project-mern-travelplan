@@ -25,11 +25,12 @@ const dataLayer = {
   }
 };
 
-export default class BuildTrip extends Component {
+export default class TravelPlan extends Component {
   constructor() {
     super();
     this.state = {
       trip: null,
+      userLevel: null,
       isLoadingTrip: true,
       viewport: {
         width: "100%",
@@ -48,10 +49,11 @@ export default class BuildTrip extends Component {
     const id = this.props.match.params.id;
     debugger;
     try {
-      const trip = await this.tripService.getTripById(id);
+      const userTrip = await this.tripService.getTripDestinations(id);
 
       this.setState({
-        trip,
+        trip: userTrip.trip,
+        userLevel: userTrip.level,
         isLoadingTrip: false
       });
     } catch (err) {
@@ -214,57 +216,54 @@ export default class BuildTrip extends Component {
       return <Loader className="full-screen-loader" />;
 
     return (
-      <div>
-        <div className="columns is-gapless">
-          <div className="column">
-            <div className="column-padding">
-              <SideMenu tripId={this.state.trip._id} />
-            </div>
-          </div>
-          <div className="column is-four-fifths">
-            <div className="column-padding">
-              <div className="card is-horizontal">
-                <div className="card-image">
-                  <figure className="image">
-                    <MapGL
-                      ref={this.mapRef}
-                      {...this.state.viewport}
-                      mapStyle={this.state.mapStyle}
-                      onViewportChange={this.handleViewportChange}
-                      mapboxApiAccessToken={MAPBOX_TOKEN}
-                    >
-                      {this.listOfMarkers()}
+      <div className="container">
+        <div className="db-duo">
+          <aside className="db-side">
+            <SideMenu tripId={this.state.trip._id} />
+          </aside>
 
-                      <Source type="geojson" data={this.drawRoute()}>
-                        <Layer {...dataLayer} />
-                      </Source>
-                    </MapGL>
-                    <Geocoder
-                      mapRef={this.mapRef}
-                      mapboxApiAccessToken={MAPBOX_TOKEN}
-                      onResult={this.handleGeoResult}
-                      onViewportChange={this.handleGeocoderViewportChange}
-                      mapboxApiAccessToken={MAPBOX_TOKEN}
-                    />
-                  </figure>
-                </div>
+          <div className="db-lead">
+            <div className="card is-horizontal">
+              <div className="card-image">
+                <figure className="image">
+                  <MapGL
+                    ref={this.mapRef}
+                    {...this.state.viewport}
+                    mapStyle={this.state.mapStyle}
+                    onViewportChange={this.handleViewportChange}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}
+                  >
+                    {this.listOfMarkers()}
 
-                <div className="card-content">
-                  <p className="is-size-5">
-                    <strong>{this.state.trip.name}</strong>
-                  </p>
-                  <p>{this.state.trip.description}</p>
-                  <br />
-                  <p>
-                    <strong>Add a destination</strong>
-                  </p>
-                  <p className="is-size-7">
-                    <i className="far fa-lightbulb"></i> Use the search field on
-                    the map canvas
-                  </p>
-                  <br />
-                  <ul>{this.listOfDestinations()}</ul>
-                </div>
+                    <Source type="geojson" data={this.drawRoute()}>
+                      <Layer {...dataLayer} />
+                    </Source>
+                  </MapGL>
+                  <Geocoder
+                    mapRef={this.mapRef}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}
+                    onResult={this.handleGeoResult}
+                    onViewportChange={this.handleGeocoderViewportChange}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}
+                  />
+                </figure>
+              </div>
+
+              <div className="card-content">
+                <p className="is-size-5">
+                  <strong>{this.state.trip.name}</strong>
+                </p>
+                <p>{this.state.trip.description}</p>
+                <br />
+                <p>
+                  <strong>Add a destination</strong>
+                </p>
+                <p className="is-size-7">
+                  <i className="far fa-lightbulb"></i> Use the search field on
+                  the map canvas
+                </p>
+                <br />
+                <ul>{this.listOfDestinations()}</ul>
               </div>
             </div>
           </div>

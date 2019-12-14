@@ -16,6 +16,7 @@ const uploadRouter = require("./routes/upload");
 const tripRouter = require("./routes/trips");
 const destinationRouter = require("./routes/destinations");
 const invitationRouter = require("./routes/invitations");
+const messageRouter = require("./routes/messages");
 const publicRouter = require("./routes/public");
 const protectedRouter = require("./routes/protected");
 
@@ -66,6 +67,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/trip", protectedRouter, tripRouter);
 app.use("/api/trip/destination", protectedRouter, destinationRouter);
 app.use("/api/trip/invitation", protectedRouter, invitationRouter);
+app.use("/api/trip/message", protectedRouter, messageRouter);
 app.use("/api/public", publicRouter);
 app.use("/api/upload", protectedRouter, uploadRouter);
 

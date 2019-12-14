@@ -18,12 +18,26 @@ const invitationSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
-    validate: [checkEmail, "Please fill in a valid email address"]
+    required: true
   },
   trip: {
     type: Schema.ObjectId,
     ref: "Trip",
+    required: true
+  },
+  level: {
+    levelname: {
+      type: String,
+      required: true
+    },
+    levelnum: {
+      type: Number,
+      required: true
+    }
+  },
+  author: {
+    type: Schema.ObjectId,
+    ref: "User",
     required: true
   }
 });

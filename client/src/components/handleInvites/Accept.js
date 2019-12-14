@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-export default function Accept({ trip, acceptInvitation }) {
+export default function Accept({ trip, acceptInvitation, match }) {
   return (
     <section className="section">
       <div className="columns is-centered">
@@ -13,6 +13,15 @@ export default function Accept({ trip, acceptInvitation }) {
                 By accepting this invitation you will be able to view, build,
                 and discuss this trip with all other trip members.
               </p>
+              {!match && (
+                <p>
+                  <em>
+                    The email address of the logged in user doesn't match with
+                    the email address on the invitation. Are you sure you want
+                    to continue?
+                  </em>
+                </p>
+              )}
             </div>
             <div className="field is-grouped">
               <p className="control">

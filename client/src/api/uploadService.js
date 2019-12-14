@@ -9,7 +9,8 @@ export default class UploadService {
   }
 
   uploadProfile = async payload => {
-    const { data } = await this.service.post("/upload/profile-photo", payload);
+    debugger;
+    const { data } = await this.service.post("/upload/profilePicture", payload);
     return data;
   };
 }

@@ -7,6 +7,7 @@ router.post(
   "/profilePicture",
   uploadCloud.single("picture"),
   async (req, res, next) => {
+    debugger;
     if (!req.file) {
       res.status(400).json({ message: "Please include a photo" });
       return;

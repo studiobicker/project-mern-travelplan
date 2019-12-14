@@ -2,19 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function SideMenu({ tripId, ...props }) {
-  debugger;
   return (
     <aside className="menu">
-      <p className="menu-label">Actions</p>
+      <p className="menu-label">Activity</p>
       <ul className="menu-list">
         <li>
-          <Link to={`/build-trip/${tripId}`}>Build your trip</Link>
+          <Link to={`/travelplan/${tripId}`}>Travel Plan</Link>
         </li>
         <li>
-          <Link to={`/invite-people/${tripId}`}>Invite people</Link>
+          <Link to={`/tripmembers/${tripId}`}>Trip Members</Link>
         </li>
         <li>
-          <Link to={`/write-message/${tripId}`}>Write a message</Link>
+          <Link to={`/messages/${tripId}`}>Messages</Link>
         </li>
       </ul>
     </aside>

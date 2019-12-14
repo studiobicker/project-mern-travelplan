@@ -23,7 +23,7 @@ export default class NewTrip extends Component {
     debugger;
     try {
       const trip = await this.tripService.create(this.state);
-      this.props.history.push(`/build-trip/${trip._id}`);
+      this.props.history.push(`/travelplan/${trip._id}`);
     } catch (err) {
       const { message } = err.response.data;
       this.setState({ err: message });

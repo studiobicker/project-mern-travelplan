@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require("../models/User");
 const Trip = require("../models/Trip");
 const Invitation = require("../models/Invitation");
+const Membership = require("../models/Membership");
+const Level = require("../models/Level");
 const sendEmail = require("./utils/sendEmail");
 const crypto = require("crypto");
 
@@ -20,64 +22,91 @@ async function confirmCreator(req, res, next) {
   }
 }
 
+async function confirmAccess(req, res, next) {
+  try {
+    const members = await Membership.find({ trip: req.params.id }).populate(
+      "user"
+    );
+    for (let i = 0; i < members.length; i++) {
+      if (members[i].user.equals(req.session.user._id)) {
+        next();
+        return false;
+      }
+    }
+    res
+      .status(403)
+      .json({ message: "You are not authorized to perform this operation" });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+}
+
 router.get("/accept/:id", async (req, res, next) => {
   const uuid = req.params.id;
-
+  debugger;
   try {
     const invitation = await Invitation.findOne({ uuid });
-    if (invitation.email === req.session.user.email) {
-      const updatedTrip = await Trip.findByIdAndUpdate(
-        invitation.trip,
-        {
-          $push: { travelers: req.session.user._id },
-          $pull: { invitations: invitation._id }
-        },
 
-        { new: true }
-      );
+    const newMember = await Membership.create({
+      user: req.session.user,
+      trip: invitation.trip,
+      level: {
+        levelname: invitation.level.levelname,
+        levelnum: invitation.level.levelnum
+      }
+    });
 
-      const updatedUser = await User.findByIdAndUpdate(
-        req.session.user._id,
-        { $push: { trips: updatedTrip._id } },
-        { new: true }
-      );
+    const updatedTrip = await Trip.findByIdAndUpdate(
+      invitation.trip,
+      {
+        $push: { members: newMember._id }
+      },
 
-      const deletedInvitation = await Invitation.findByIdAndDelete(
-        invitation._id
-      );
+      { new: true }
+    );
 
-      res.status(200).json({ message: "ok" });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.session.user._id,
+      { $push: { memberships: newMember._id } },
+      { new: true }
+    );
+
+    const deletedInvitation = await Invitation.findByIdAndDelete(
+      invitation._id
+    );
+
+    res.status(200).json({ message: "ok" });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+router.get("/compare/:id", async (req, res, next) => {
+  const id = req.params.id;
+  const userEmail = req.session.user.email;
+  debugger;
+  try {
+    const invitation = await Invitation.findById(id);
+
+    const hashedEmail = crypto
+      .createHash("md5")
+      .update(userEmail)
+      .digest("hex");
+
+    if (invitation.email === hashedEmail) {
+      res.status(200).json({ result: true });
     } else {
-      res.status(403).json({
-        message: "Email address incorrect"
-      });
+      res.status(200).json({ result: false });
     }
   } catch (err) {
     res.status(500).json({ message: err });
   }
 });
 
-router.get(
-  "/getTripInvitations/:id",
-  confirmCreator,
-  async (req, res, next) => {
-    const tripId = req.params.id;
-    try {
-      const trip = await Trip.findById(tripId).populate(
-        "invitations travelers"
-      );
-      if (trip) {
-        res.status(200).json(trip);
-      }
-    } catch (err) {
-      res.status(500).json({ message: err });
-    }
-  }
-);
-
 router.post("/send/:id", confirmCreator, async (req, res, next) => {
-  const { email } = req.body;
+  const { email, level } = req.body;
   const tripId = req.params.id;
+  const user = req.session.user;
   const inviteUrl = process.env.INVITE_URL;
 
   if (!email) {
@@ -87,22 +116,31 @@ router.post("/send/:id", confirmCreator, async (req, res, next) => {
 
   const uuid = crypto.randomBytes(16).toString("hex");
 
+  const hashedEmail = crypto
+    .createHash("md5")
+    .update(email)
+    .digest("hex");
+
   try {
+    debugger;
+    const lookupLevel = await Level.findOne({ level });
+
     const newInvitation = await Invitation.create({
-      email,
       uuid,
-      trip: tripId
+      email: hashedEmail,
+      trip: tripId,
+      level: {
+        levelname: lookupLevel.name,
+        levelnum: lookupLevel.level
+      },
+      author: user
     });
 
-    const updatedTrip = await Trip.findByIdAndUpdate(
-      tripId,
-      { $push: { invitations: newInvitation._id } },
-      { new: true }
-    ).populate("invitations travelers");
+    const trip = await Trip.findById(tripId);
 
-    const message = `<strong>You're  invited to join trip ${updatedTrip.name} on TripBuilder</strong>
+    const message = `<strong>${user.name}(${user.email}) has invited you to join trip ${trip.name} on TripBuilder</strong>
       <br><br>
-      By accepting this invitation you will be able to view, build, and discuss this trip with all other trip members.
+      By accepting this invitation you will be able to view, build and discuss this trip with all other trip members.
       <br><br>
       To accept, click the following link and follow the instructions:
       <br>
@@ -113,37 +151,15 @@ router.post("/send/:id", confirmCreator, async (req, res, next) => {
 
     sendEmail(
       email,
-      `You're  invited to join trip ${updatedTrip.name} on TripBuilder`,
+      `You're  invited to join trip ${trip.name} on TripBuilder`,
       message
     );
 
-    res.status(200).json(updatedTrip);
+    res.status(200).json({ message: `Invitation is send to ${email} ` });
   } catch (err) {
     res
       .status(500)
       .json({ message: "Sending an invitation failed, please try again" });
-    console.log(err);
-  }
-});
-
-router.post("/remove/:id", confirmCreator, async (req, res, next) => {
-  const { invitationId } = req.body;
-  const tripId = req.params.id;
-
-  try {
-    const updatedTrip = await Trip.findByIdAndUpdate(
-      tripId,
-      { $pull: { invitations: invitationId } },
-      { new: true }
-    ).populate("travelers invitations");
-
-    const deletedInvitation = await Invitation.findByIdAndDelete(invitationId);
-
-    res.status(200).json(updatedTrip);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Removing a destination failed, please try again" });
     console.log(err);
   }
 });

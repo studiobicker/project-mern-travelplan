@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Trip = require("../models/Trip");
-const Member = require("../models/Member");
+const Membership = require("../models/Membership");
+const Message = require("../models/Message");
 
 async function confirmCreator(req, res, next) {
   try {
@@ -12,6 +13,24 @@ async function confirmCreator(req, res, next) {
       res
         .status(403)
         .json({ message: "You are not authorized to perform this operation" });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+}
+async function confirmAccess(req, res, next) {
+  try {
+    const members = await Membership.find({ trip: req.params.id }).populate(
+      "user"
+    );
+    for (let i = 0; i < members.length; i++) {
+      if (members[i].user.equals(req.session.user._id)) {
+        next();
+        return false;
+      }
+    }
+    res
+      .status(403)
+      .json({ message: "You are not authorized to perform this operation" });
   } catch (err) {
     res.status(500).json({ message: err });
   }
@@ -26,7 +45,7 @@ router.post("/createTrip", async (req, res, next) => {
     res.status(400).json({ message: "Please provide a name for your trip" });
     return false;
   }
-  debugger;
+
   try {
     const newTrip = await Trip.create({
       name,
@@ -35,17 +54,21 @@ router.post("/createTrip", async (req, res, next) => {
       tripPicture
     });
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { $push: { trips: newTrip._id } },
-      { new: true }
-    );
-    const newMember = await Member.create({
+    const newMember = await Membership.create({
       user: id,
       trip: newTrip._id,
-      role: "admin"
+      level: {
+        levelname: "admin",
+        levelnum: 1
+      }
     });
-    debugger;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $push: { memberships: newMember._id } },
+      { new: true }
+    );
+
     const updatedTrip = await Trip.findByIdAndUpdate(
       newTrip._id,
       { $push: { members: newMember._id } },
@@ -61,10 +84,14 @@ router.post("/createTrip", async (req, res, next) => {
 });
 
 router.get("/getTripsByUser", async (req, res, next) => {
+  debugger;
   try {
-    const user = await User.findById(req.session.user._id).populate("trips");
+    const user = await User.findById(req.session.user._id).populate({
+      path: "memberships",
+      populate: { path: "trip" }
+    });
     if (user) {
-      res.status(200).json(user.trips);
+      res.status(200).json(user.memberships);
     }
   } catch (err) {
     res.status(500).json({ message: err });
@@ -72,13 +99,22 @@ router.get("/getTripsByUser", async (req, res, next) => {
   }
 });
 
-router.get("/getTripById/:id", confirmCreator, async (req, res, next) => {
+router.get("/getTripById/:id", confirmAccess, async (req, res, next) => {
   const tripId = req.params.id;
   try {
-    const trip = await Trip.findById(tripId).populate({
-      path: "destinations",
-      options: { sort: { sequence: 1 } }
-    });
+    const trip = await Trip.findById(tripId)
+      .populate({
+        path: "destinations",
+        options: {
+          sort: { sequence: 1 }
+        }
+      })
+      .populate({
+        path: "members",
+        populate: {
+          path: "user"
+        }
+      });
     if (trip) {
       res.status(200).json(trip);
     }
@@ -107,6 +143,78 @@ router.get("/remove/:id", confirmCreator, async (req, res, next) => {
     }
   } catch (err) {
     res.status(500).json({ message: err });
+  }
+});
+
+router.get(
+  "/getTripDestinations/:id",
+  confirmAccess,
+  async (req, res, next) => {
+    const tripId = req.params.id;
+    debugger;
+    try {
+      const membership = await Membership.findOne({
+        user: req.session.user._id,
+        trip: tripId
+      }).populate({
+        path: "trip",
+        populate: {
+          path: "destinations",
+          options: {
+            sort: { sequence: 1 }
+          }
+        }
+      });
+
+      res.status(200).json(membership);
+    } catch (err) {
+      res.status(500).json({ message: err });
+      console.log(err);
+    }
+  }
+);
+
+router.get("/getTripMembers/:id", confirmAccess, async (req, res, next) => {
+  const tripId = req.params.id;
+  try {
+    const membership = await Membership.findOne({
+      user: req.session.user._id,
+      trip: tripId
+    }).populate({
+      path: "trip",
+      populate: {
+        path: "members",
+        populate: {
+          path: "user"
+        }
+      }
+    });
+    res.status(200).json(membership);
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+router.get("/getTripMessages/:id", confirmAccess, async (req, res, next) => {
+  const tripId = req.params.id;
+  try {
+    const membership = await Membership.findOne({
+      user: req.session.user._id,
+      trip: tripId
+    }).populate({
+      path: "trip",
+      populate: {
+        path: "messageboard",
+        options: {
+          created: { sequence: 1 }
+        }
+      }
+    });
+
+    res.status(200).json(membership);
+  } catch (err) {
+    res.status(500).json({ message: err });
+    console.log(err);
   }
 });
 

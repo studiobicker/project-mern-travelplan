@@ -12,6 +12,7 @@ export default function Register({ setUserState, history }) {
   const authService = new AuthService();
 
   const onSubmitHandler = async e => {
+    debugger;
     e.preventDefault();
     try {
       const user = await authService.register(inputFields);

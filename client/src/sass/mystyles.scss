@@ -12,12 +12,17 @@ $green: #7ebf8a;
 $section-padding: 3rem 1.5rem;
 $column-padding: 1.25rem;
 
+$tooltip-background-color: #0b576d;
+$tooltip-background-opacity: 1;
+
+$modal-card-head-background-color: #fff;
 // Update Bulma's global variables
 
 $primary: $teal;
 $link: $green;
 
 @import "../../node_modules/bulma/bulma.sass";
+@import "../../node_modules/bulma-tooltip/src/sass/index.sass";
 
 .column-padding {
   padding: $column-padding;
@@ -106,4 +111,49 @@ $dimensions: 256 !default;
   100% {
     transform: rotate(360deg);
   }
+}
+
+.navbar-item.account {
+  display: block;
+}
+
+.memberList {
+  display: flex;
+}
+
+.button.is-round {
+  border-radius: 50%;
+}
+.button.is-image {
+  padding: 0;
+}
+
+@media screen and (min-width: 1024px) {
+  .db-duo {
+    display: flex;
+  }
+  .db-side {
+    flex: 0 0 calc(10.5rem + 1.5rem);
+    padding: 2rem 0 2rem 0;
+  }
+  .db-lead {
+    margin-right: -2rem;
+    padding: 2rem;
+    overflow: hidden;
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+}
+.messageboard {
+  display: flex;
+  flex-direction: column;
+  height: 65%;
+  width: 100%;
+}
+
+.messages {
+  height: 65%;
+  width: 100%;
+  transform: translateZ(0px);
+  overflow: auto;
 }

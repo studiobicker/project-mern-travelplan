@@ -13,6 +13,7 @@ export default class AcceptInvitation extends Component {
     this.state = {
       task: null,
       invitation: null,
+      match: null,
       isLoading: true,
       user: null,
       err: null
@@ -26,18 +27,22 @@ export default class AcceptInvitation extends Component {
     let invitation;
     let error = null;
     try {
-      debugger;
       invitation = await this.tripService.getInvitation(token);
       const user = this.props.user; /* check if user is loggedIn */
 
-      if (user && user.email !== invitation.email) {
-        /* check if user === invitee */
-        error = `This invitation was send to ${invitation.email}. Please switch account.`;
+      let match = null;
+      if (user) {
+        /* check if user mail === invitee mail */
+        const matchingEmail = await this.tripService.compareEmail(
+          invitation._id
+        );
+        match = matchingEmail.result;
       }
-
+      debugger;
       this.setState({
         task,
         invitation,
+        match,
         user: user,
         err: error,
         isLoading: false
@@ -73,6 +78,7 @@ export default class AcceptInvitation extends Component {
         <Accept
           trip={this.state.invitation.trip.name}
           acceptInvitation={this.acceptInvitation}
+          match={this.match}
         />
       );
     } else {

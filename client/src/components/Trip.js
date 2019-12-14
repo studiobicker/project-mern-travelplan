@@ -7,23 +7,28 @@ export default function Trip(props) {
       <article className="media">
         <div className="media-left">
           <figure className="image is-128x128">
-            <img src={props.tripPicture} alt={props.name} />
+            <img src={props.trip.tripPicture} alt={props.trip.name} />
           </figure>
         </div>
         <div className="media-content">
           <div className="content">
             <p>
-              <strong>{props.name}</strong>
+              <strong>{props.trip.name}</strong>
               <br />
-              {props.description}
+              {props.trip.description}
             </p>
+            <p></p>
           </div>
+
           <div className="field is-grouped is-grouped-right">
-            <Link className="button is-success" to={`/build-trip/${props._id}`}>
+            <Link
+              className="button is-success"
+              to={`/travelplan/${props.trip._id}`}
+            >
               <span className="icon is-small">
                 <i className="fas fa-map-marked-alt"></i>
               </span>
-              <span>Build your trip</span>
+              <span>Go to Travel Plan</span>
             </Link>
           </div>
         </div>

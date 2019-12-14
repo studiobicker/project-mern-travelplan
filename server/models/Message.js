@@ -16,7 +16,7 @@ const messageSchema = new Schema({
     ref: "Trip",
     required: "You must supply a trip!"
   },
-  text: {
+  msg: {
     type: String,
     required: "Your message must have text!"
   }

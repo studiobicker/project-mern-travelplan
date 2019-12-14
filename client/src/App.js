@@ -6,9 +6,10 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import NewTrip from "./pages/NewTrip";
-import BuildTrip from "./pages/BuildTrip";
-import InvitePeople from "./pages/InvitePeople";
+import TravelPlan from "./pages/TravelPlan";
+import TripMembers from "./pages/TripMembers";
 import AcceptInvitation from "./pages/AcceptInvitation";
+import Messages from "./pages/Messages";
 import PrivateRoute from "./components/PrivateRoute";
 import Loader from "./components/Loader";
 import AuthService from "./api/authService";
@@ -27,6 +28,7 @@ export default class App extends Component {
   }
 
   componentDidMount = async () => {
+    debugger;
     let user;
     try {
       user = await this.authService.isLoggedIn();
@@ -75,7 +77,6 @@ export default class App extends Component {
           <PrivateRoute
             path="/dashboard"
             user={this.state.user}
-            setTripState={this.setTripState}
             component={Dashboard}
           />
           <PrivateRoute
@@ -90,14 +91,14 @@ export default class App extends Component {
             component={NewTrip}
           />
           <Route
-            path="/build-trip/:id"
+            path="/travelplan/:id"
             user={this.state.user}
-            component={BuildTrip}
+            component={TravelPlan}
           />
           <Route
-            path="/invite-people/:id"
+            path="/tripmembers/:id"
             user={this.state.user}
-            component={InvitePeople}
+            component={TripMembers}
           />
           <Route
             path="/invite/:task"
@@ -108,6 +109,11 @@ export default class App extends Component {
                 setUserState={this.setUserState}
               />
             )}
+          />
+          <Route
+            path="/messages/:id"
+            user={this.state.user}
+            component={Messages}
           />
         </Switch>
       </div>

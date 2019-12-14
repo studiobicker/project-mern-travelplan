@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import TripService from "../api/tripService";
 import Trip from "../components/Trip";
 import NothingFound from "../components/NothingFound";
+import Loader from "../components/Loader";
 
 export default class Dashboard extends Component {
   constructor() {
     super();
     this.state = {
       myTrips: null,
-      loading: true
+      isLoading: true
     };
     this.tripService = new TripService();
   }
@@ -17,7 +18,7 @@ export default class Dashboard extends Component {
     try {
       const myTrips = await this.tripService.getMyTrips();
       debugger;
-      this.setState({ myTrips, loading: false });
+      this.setState({ myTrips, isLoading: false });
     } catch (err) {
       console.log(err);
     }
@@ -35,10 +36,10 @@ export default class Dashboard extends Component {
   };
 
   render() {
+    if (this.state.isLoading) return <Loader className="full-screen-loader" />;
     return (
       <section className="section">
         <div className="container">
-          {this.state.loading && <p>Loading...</p>}
           <div className="columns">
             <div className="column is-half">{this.renderTrips()}</div>
           </div>

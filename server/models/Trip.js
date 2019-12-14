@@ -20,15 +20,10 @@ const tripSchema = new Schema({
   members: [
     {
       type: Schema.ObjectId,
-      ref: "member"
+      ref: "Membership"
     }
   ],
-  invitations: [
-    {
-      type: Schema.ObjectId,
-      ref: "Invitation"
-    }
-  ],
+
   destinations: [
     {
       type: Schema.ObjectId,

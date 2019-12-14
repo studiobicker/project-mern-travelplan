@@ -1,14 +1,17 @@
 import React from "react";
 
 export default function Member({ index, member, deleteMember, ...props }) {
+  debugger;
   return (
     <li>
-      <div className="memberLi">
-        <span>{member.name}</span>
-        <span className="deleteMember" onClick={() => deleteMember(member._id)}>
-          <i className="fas fa-trash-alt"></i>
-        </span>
-      </div>
+      <button
+        className="button is-medium is-white is-image"
+        data-tooltip={member.user.name}
+      >
+        <figure className="image is-48x48">
+          <img className="is-rounded" src={member.user.profilePicture} />
+        </figure>
+      </button>
     </li>
   );
 }

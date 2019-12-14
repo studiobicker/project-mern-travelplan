@@ -25,13 +25,12 @@ const userSchema = new Schema({
   profilePicture: {
     type: String,
     default:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/440px-SNice.svg.png"
+      "https://res.cloudinary.com/drs7qiyrp/image/upload/v1576188722/travelAppAuth/avatar_a0uiq8.jpg"
   },
-  trips: [
+  memberships: [
     {
       type: Schema.ObjectId,
-      ref: "Trip",
-      required: "You must supply a trip!"
+      ref: "Membership"
     }
   ]
 });

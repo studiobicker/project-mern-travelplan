@@ -27,6 +27,21 @@ export default class tripService {
     return data;
   };
 
+  getTripDestinations = async id => {
+    const { data } = await this.service.get(`trip/getTripDestinations/${id}`);
+    return data;
+  };
+
+  getTripMembers = async id => {
+    const { data } = await this.service.get(`trip/getTripMembers/${id}`);
+    return data;
+  };
+
+  getTripMessages = async id => {
+    const { data } = await this.service.get(`trip/getTripMessages/${id}`);
+    return data;
+  };
+
   getInvitations = async id => {
     const { data } = await this.service.get(
       `trip/invitation/getTripInvitations/${id}`
@@ -35,9 +50,10 @@ export default class tripService {
   };
 
   sendInvitation = async (payload, id) => {
-    const email = payload;
+    const { email, level } = payload;
     const { data } = await this.service.post(`trip/invitation/send/${id}`, {
-      email
+      email,
+      level: parseInt(level)
     });
     return data;
   };
@@ -57,6 +73,11 @@ export default class tripService {
 
   acceptInvitation = async id => {
     const { data } = await this.service.get(`trip/invitation/accept/${id}`);
+    return data;
+  };
+
+  compareEmail = async id => {
+    const { data } = await this.service.get(`trip/invitation/compare/${id}`);
     return data;
   };
 
@@ -86,6 +107,23 @@ export default class tripService {
       secondDestSeq,
       secondDestId,
       destSeq
+    });
+    return data;
+  };
+
+  addMessage = async (payload, id) => {
+    debugger;
+    const msg = payload;
+    const { data } = await this.service.post(`trip/message/add/${id}`, {
+      msg
+    });
+    return data;
+  };
+
+  deleteMessage = async (payload, id) => {
+    const messageId = payload;
+    const { data } = await this.service.post(`trip/message/remove/${id}`, {
+      messageId
     });
     return data;
   };

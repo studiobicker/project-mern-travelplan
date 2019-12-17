@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const confirmAccess = require("./utils/confirmAccess");
-const User = require("../models/User");
+const isMember = require("./utils/isMember");
 const Trip = require("../models/Trip");
 const Message = require("../models/Message");
 
-router.post("/add/:id", confirmAccess, async (req, res, next) => {
+router.post("/add/:id", isMember, async (req, res, next) => {
   const { msg } = req.body;
   const tripId = req.params.id;
   const user = req.session.user;
@@ -38,7 +37,7 @@ router.post("/add/:id", confirmAccess, async (req, res, next) => {
   }
 });
 
-router.post("/remove/:id", confirmAccess, async (req, res, next) => {
+router.post("/remove/:id", isMember, async (req, res, next) => {
   const { destinationId } = req.body;
   const tripId = req.params.id;
 

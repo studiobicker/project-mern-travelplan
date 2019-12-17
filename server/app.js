@@ -71,9 +71,9 @@ app.use("/api/trip/message", protectedRouter, messageRouter);
 app.use("/api/public", publicRouter);
 app.use("/api/upload", protectedRouter, uploadRouter);
 
-app.get("/*", function(req, res) {
-  // res.sendFile(path.join(__dirname, "build", "index.html"));
-  res.sendFile("./build/index.html");
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+  // res.sendFile("./build/index.html");
 });
 
 // catch 404 and forward to error handler

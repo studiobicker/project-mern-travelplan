@@ -207,10 +207,41 @@ $dimensions: 256 !default;
   background-size: contain;
   background-position: center center;
 }
-
+.weatherIcon.i-01d {
+  background-image: url("images/01d.png");
+}
+.weatherIcon.i-01n {
+  background-image: url("images/01n.png");
+}
+.weatherIcon.i-02d {
+  background-image: url("images/02d.png");
+}
+.weatherIcon.i-02n {
+  background-image: url("images/02n.png");
+}
+.weatherIcon.i-03d,
+.weatherIcon.i-03n {
+  background-image: url("images/03d.png");
+}
 .weatherIcon.i-04d,
 .weatherIcon.i-04n {
   background-image: url("images/04d.png");
+}
+.weatherIcon.i-09d,
+.weatherIcon.i-09n {
+  background-image: url("images/09d.png");
+}
+.weatherIcon.i-10d,
+.weatherIcon.i-10n {
+  background-image: url("images/10d.png");
+}
+.weatherIcon.i-11d,
+.weatherIcon.i-11n {
+  background-image: url("images/11d.png");
+}
+.weatherIcon.i-50d,
+.weatherIcon.i-50n {
+  background-image: url("images/50d.png");
 }
 
 .currentWeather .temp {

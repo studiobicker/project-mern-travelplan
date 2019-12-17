@@ -14,14 +14,13 @@ export default class NavBarTrips extends Component {
     if (myTrips && myTrips.length > 0) {
       return myTrips.map((trip, i) => {
         return (
-          <Link
+          <div
             key={i}
             className="navbar-item"
             onClick={() => this.selectTrip(trip.trip._id)}
-            to={`/trip/${trip.trip._id}`}
           >
             {trip.trip.name}
-          </Link>
+          </div>
         );
       });
     } else {
@@ -37,6 +36,7 @@ export default class NavBarTrips extends Component {
     try {
       const updatedUser = await this.tripService.setCurrentTrip(id);
       this.props.setUserState(updatedUser);
+      this.props.history.push(`/trip/${updatedUser.currentTrip.trip._id}`);
     } catch (err) {
       console.log(err);
     }

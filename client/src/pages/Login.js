@@ -20,7 +20,7 @@ export default function Login({ setUserState, history }) {
       const user = await authService.login(inputFields);
       setUserState(user);
       if (user.currentTrip) {
-        history.push(`/trip/${user.currentTrip._id}`);
+        history.push(`/trip/${user.currentTrip.trip._id}`);
       } else {
         history.push("/dashboard");
       }

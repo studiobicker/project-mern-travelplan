@@ -37,15 +37,12 @@ export default class NavBarTrips extends Component {
     try {
       const updatedUser = await this.tripService.setCurrentTrip(id);
       this.props.setUserState(updatedUser);
-      debugger;
-      //this.props.history.push(`/trip/{id}`);
     } catch (err) {
       console.log(err);
     }
   };
 
   render() {
-    debugger;
     if (this.props.user.currentTrip) {
       return (
         <div className="navbar-item has-dropdown is-hoverable">

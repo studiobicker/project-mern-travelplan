@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import TripService from "../api/tripService";
 import Loader from "../components/Loader";
 import Destination from "../components/Destination";
-import SideMenu from "../components/SideMenu";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import { getBounds } from "../utils/functions";
@@ -92,7 +91,7 @@ export default class TravelPlan extends Component {
       const { longitude, latitude, zoom } = new WebMercatorViewport(
         this.state.viewport
       ).fitBounds(bounds, {
-        padding: 20
+        padding: 100
       });
       viewport = {
         ...this.state.viewport,
@@ -269,15 +268,11 @@ export default class TravelPlan extends Component {
       return <Loader className="full-screen-loader" />;
 
     return (
-      <div className="container">
-        <div className="db-duo">
-          <aside className="db-side">
-            <SideMenu tripId={this.state.trip._id} />
-          </aside>
-
-          <div className="db-lead">
-            <div className="card is-horizontal">
-              <div className="card-image">
+      <div className="section">
+        <div className="container">
+          <div className="tile is-ancestor">
+            <div className="tile is-parent is-8">
+              <article className="tile is-child">
                 <figure className="image">
                   <MapGL
                     ref={this.mapRef}
@@ -299,24 +294,18 @@ export default class TravelPlan extends Component {
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                   />
                 </figure>
-              </div>
-
-              <div className="card-content">
-                <p className="is-size-5">
-                  <strong>{this.state.trip.name}</strong>
-                </p>
-                <p>{this.state.trip.description}</p>
-                <br />
-                <p>
-                  <strong>Add a destination</strong>
-                </p>
+              </article>
+            </div>
+            <div className="tile is-parent">
+              <article className="tile is-child content box">
+                <h3 className="subtitle">Add a destination</h3>
                 <p className="is-size-7">
                   <i className="far fa-lightbulb"></i> Use the search field on
                   the map canvas
                 </p>
                 <br />
                 <ul>{this.listOfDestinations()}</ul>
-              </div>
+              </article>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Passion+One:700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Poppins:700&display=swap");
 /*! bulma.io v0.8.0 | MIT License | github.com/jgthms/bulma */
 @keyframes spinAround {
   from {
@@ -832,7 +832,7 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important; }
 
 .is-family-secondary {
-  font-family: "Passion One", cursive !important; }
+  font-family: "Poppins", sans-serif !important; }
 
 .is-family-sans-serif {
   font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important; }
@@ -2312,8 +2312,8 @@ a.box:active {
 
 .notification {
   background-color: whitesmoke;
-  border-radius: 4px;
-  padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+  border-radius: 16px;
+  padding: 2rem;
   position: relative; }
   .notification a:not(.button):not(.dropdown-item) {
     color: currentColor;
@@ -2786,7 +2786,7 @@ a.tag:hover {
 
 .title {
   color: #363636;
-  font-family: "Passion One", cursive;
+  font-family: "Poppins", sans-serif;
   font-size: 2rem;
   font-weight: 600;
   line-height: 1.125; }
@@ -8309,3 +8309,37 @@ label.panel-block {
 .navbar-start {
   flex-grow: 1;
   justify-content: center; }
+
+.currentWeather {
+  border-top: 1px dashed #fff;
+  margin-top: 40px;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center; }
+
+.weatherIcon {
+  height: 2rem;
+  width: 2rem;
+  background-size: contain;
+  background-position: center center; }
+
+.weatherIcon.i-04d,
+.weatherIcon.i-04n {
+  background-image: url("images/04d.png"); }
+
+.currentWeather .temp {
+  font-weight: 700;
+  font-size: 1.5rem;
+  font-family: "Poppins", sans-serif;
+  margin-left: 5px; }
+
+.currentWeather .desc {
+  font-size: 0.8rem;
+  margin-left: 5px; }
+
+.tile-menu {
+  position: absolute;
+  right: 20px;
+  top: 16px; }

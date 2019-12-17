@@ -23,7 +23,6 @@ export default class App extends Component {
     super();
     this.state = {
       user: null,
-      myTrips: null,
       isLoadingUser: true
     };
     this.authService = new AuthService();
@@ -41,7 +40,6 @@ export default class App extends Component {
   };
 
   setUserState = user => {
-    debugger;
     this.setState({ user, isLoadingUser: false });
   };
 
@@ -58,7 +56,6 @@ export default class App extends Component {
   render() {
     if (this.state.isLoadingUser)
       return <Loader className="full-screen-loader" />;
-    debugger;
     return (
       <div className="App">
         <NavBar

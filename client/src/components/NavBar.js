@@ -62,8 +62,8 @@ export default class NavBar extends Component {
                   to={`/tripmembers/${this.props.user.currentTrip.trip._id}`}
                   onClick={this.closeMenu}
                 >
-                  <span class="icon">
-                    <i class="far fa-compass"></i>
+                  <span className="icon">
+                    <i className="far fa-compass"></i>
                   </span>
                   <span>Explore</span>
                 </Link>
@@ -72,8 +72,8 @@ export default class NavBar extends Component {
                   to={`/tripmembers/${this.props.user.currentTrip.trip._id}`}
                   onClick={this.closeMenu}
                 >
-                  <span class="icon">
-                    <i class="far fa-bookmark"></i>
+                  <span className="icon">
+                    <i className="far fa-bookmark"></i>
                   </span>
                   <span>Saved</span>
                 </Link>
@@ -83,8 +83,8 @@ export default class NavBar extends Component {
                   to={`/travelplan/${this.props.user.currentTrip.trip._id}`}
                   onClick={this.closeMenu}
                 >
-                  <span class="icon">
-                    <i class="fas fa-route"></i>
+                  <span className="icon">
+                    <i className="fas fa-route"></i>
                   </span>
                   <span>Travel route</span>
                 </Link>
@@ -94,8 +94,8 @@ export default class NavBar extends Component {
                   to={`/messages/${this.props.user.currentTrip.trip._id}`}
                   onClick={this.closeMenu}
                 >
-                  <span class="icon">
-                    <i class="far fa-comments"></i>
+                  <span className="icon">
+                    <i className="far fa-comments"></i>
                   </span>
                   <span>Chat</span>
                 </Link>

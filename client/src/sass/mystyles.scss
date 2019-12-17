@@ -1,12 +1,16 @@
 @charset "utf-8";
-@import url("https://fonts.googleapis.com/css?family=Passion+One:700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Poppins:700&display=swap");
 
-$family-secondary: "Passion One", cursive;
+$family-secondary: "Poppins", sans-serif;
 $title-family: $family-secondary;
 $subtitle-weight: 600;
 $box-padding: 2rem;
 $box-radius: 16px;
 $box-shadow: 0;
+
+$notification-radius: 16px;
+$notification-padding: 2rem;
+
 // Set your brand colors
 $teal: #0b576d;
 $green: #8ac0bd;
@@ -183,4 +187,46 @@ $dimensions: 256 !default;
 .navbar-start {
   flex-grow: 1;
   justify-content: center;
+}
+
+//Weather icons
+
+.currentWeather {
+  border-top: 1px dashed #fff;
+  margin-top: 40px;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.weatherIcon {
+  height: 2rem;
+  width: 2rem;
+  background-size: contain;
+  background-position: center center;
+}
+
+.weatherIcon.i-04d,
+.weatherIcon.i-04n {
+  background-image: url("images/04d.png");
+}
+
+.currentWeather .temp {
+  font-weight: 700;
+  font-size: 1.5rem;
+  font-family: $family-secondary;
+  margin-left: 5px;
+}
+.currentWeather .desc {
+  font-size: 0.8rem;
+  margin-left: 5px;
+}
+
+//Tile Styling Extra
+.tile-menu {
+  position: absolute;
+  right: 20px;
+  top: 16px;
 }

@@ -4,10 +4,13 @@
 $family-secondary: "Passion One", cursive;
 $title-family: $family-secondary;
 $subtitle-weight: 600;
-$box-padding: 1.875rem;
+$box-padding: 2rem;
+$box-radius: 16px;
+$box-shadow: 0;
 // Set your brand colors
 $teal: #0b576d;
-$green: #7ebf8a;
+$green: #8ac0bd;
+$orange: #f57679;
 
 $section-padding: 3rem 1.5rem;
 $column-padding: 1.25rem;
@@ -15,14 +18,34 @@ $column-padding: 1.25rem;
 $tooltip-background-color: #0b576d;
 $tooltip-background-opacity: 1;
 
+$navbar-padding-vertical: 0.5rem;
+$navbar-padding-horizontal: 1.5rem;
+
 $modal-card-head-background-color: #fff;
 // Update Bulma's global variables
 
 $primary: $teal;
-$link: $green;
+$link: $orange;
 
 @import "../../node_modules/bulma/bulma.sass";
 @import "../../node_modules/bulma-tooltip/src/sass/index.sass";
+
+.App {
+  background-color: #eee;
+  min-height: 100vh;
+}
+
+.is-bg-img {
+  background: url("images/hero.jpg") center center;
+  background-size: cover;
+}
+
+.overlay {
+  background-color: rgba(11, 87, 109, 0.2);
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+}
 
 .column-padding {
   padding: $column-padding;
@@ -156,4 +179,8 @@ $dimensions: 256 !default;
   width: 100%;
   transform: translateZ(0px);
   overflow: auto;
+}
+.navbar-start {
+  flex-grow: 1;
+  justify-content: center;
 }

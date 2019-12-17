@@ -26,6 +26,7 @@
     "multer-storage-cloudinary": "^2.2.1",
     "nodemailer": "^6.3.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
+    "react-select": "^3.0.8",
     "uuid": "^3.3.3"
   }
 }

@@ -19,9 +19,7 @@ export default function Destination({
           onClick={() => changeOrderDestination("down", index)}
         ></i>
 
-        <span>
-          {destination.sequence} {destination.name}
-        </span>
+        <span>{destination.name}</span>
         <span
           className="is-pulled-right"
           onClick={() => deleteDestination(destination._id)}

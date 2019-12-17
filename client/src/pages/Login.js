@@ -19,7 +19,11 @@ export default function Login({ setUserState, history }) {
     try {
       const user = await authService.login(inputFields);
       setUserState(user);
-      history.push("/dashboard");
+      if (user.currentTrip) {
+        history.push(`/trip/${user.currentTrip._id}`);
+      } else {
+        history.push("/dashboard");
+      }
     } catch (err) {
       const { message } = err.response.data;
       setError(message);

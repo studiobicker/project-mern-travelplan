@@ -27,6 +27,10 @@ const userSchema = new Schema({
     default:
       "https://res.cloudinary.com/drs7qiyrp/image/upload/v1576188722/travelAppAuth/avatar_a0uiq8.jpg"
   },
+  currentTrip: {
+    type: Schema.ObjectId,
+    ref: "Membership"
+  },
   memberships: [
     {
       type: Schema.ObjectId,

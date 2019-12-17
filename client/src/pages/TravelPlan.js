@@ -5,9 +5,20 @@ import Destination from "../components/Destination";
 import SideMenu from "../components/SideMenu";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import { getBounds } from "../utils/functions";
 
-import MapGL, { Marker, Source, Layer } from "react-map-gl";
+import MapGL, {
+  Marker,
+  Source,
+  Layer,
+  LinearInterpolator,
+  FlyToInterpolator
+} from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
+import WebMercatorViewport from "viewport-mercator-project";
+
+// 3rd-party easing functions
+//import d3 from "d3-ease";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -26,6 +37,7 @@ const dataLayer = {
 };
 
 export default class TravelPlan extends Component {
+  debugger;
   constructor() {
     super();
     this.state = {
@@ -33,32 +45,78 @@ export default class TravelPlan extends Component {
       userLevel: null,
       isLoadingTrip: true,
       viewport: {
-        width: "100%",
-        height: "80vh",
+        width: 400,
+        height: 400,
         longitude: 4.89066,
         latitude: 52.373169,
-        zoom: 6
+        zoom: 3
       },
       mapStyle: "mapbox://styles/studiobicker/ck3jwdm2s18n71dmzr1z32dks",
       err: null
     };
     this.tripService = new TripService();
+    this.mapRef = React.createRef();
   }
 
   componentDidMount = async () => {
     const id = this.props.match.params.id;
-    debugger;
     try {
       const userTrip = await this.tripService.getTripDestinations(id);
+
+      const viewport = this.setViewport(userTrip.trip);
 
       this.setState({
         trip: userTrip.trip,
         userLevel: userTrip.level,
+        viewport,
         isLoadingTrip: false
       });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  setViewport = trip => {
+    debugger;
+    let longitudes = [];
+    let latitudes = [];
+    trip.destinations.map((destination, i) => {
+      longitudes[i] = parseFloat(destination.longitude);
+      latitudes[i] = parseFloat(destination.latitude);
+    });
+
+    const bounds = getBounds(longitudes, latitudes);
+
+    let viewport;
+    if (trip.destinations.length > 0) {
+      const { longitude, latitude, zoom } = new WebMercatorViewport(
+        this.state.viewport
+      ).fitBounds(bounds, {
+        padding: 20
+      });
+      viewport = {
+        ...this.state.viewport,
+        width: "100%",
+        height: "80vh",
+        longitude,
+        latitude,
+        zoom,
+        transitionDuration: 1000,
+        transitionInterpolator: new FlyToInterpolator()
+      };
+    } else {
+      viewport = {
+        ...this.state.viewport,
+        longitude: trip.country.longitude,
+        latitude: trip.country.latitude,
+        width: "100%",
+        height: "80vh",
+        transitionDuration: 1000,
+        transitionInterpolator: new FlyToInterpolator()
+      };
+    }
+
+    return viewport;
   };
 
   listOfMarkers = () => {
@@ -94,6 +152,7 @@ export default class TravelPlan extends Component {
   };
 
   drawRoute = () => {
+    debugger;
     let coordinates = [];
     this.state.trip.destinations.map((destination, i) => {
       coordinates[i] = [destination.longitude, destination.latitude];
@@ -110,21 +169,20 @@ export default class TravelPlan extends Component {
         }
       ]
     };
+
     return geojson;
   };
 
   addDestination = async dest => {
     try {
       const tripId = this.state.trip._id;
-      const newDestination = await this.tripService.addDestination(
-        dest,
-        tripId
-      );
+      const updatedTrip = await this.tripService.addDestination(dest, tripId);
+
+      const viewport = this.setViewport(updatedTrip);
+
       this.setState({
-        trip: {
-          ...this.state.trip,
-          destinations: this.state.trip.destinations.concat(newDestination)
-        }
+        trip: updatedTrip,
+        viewport
       });
     } catch (err) {
       const { message } = err.response.data;
@@ -134,18 +192,13 @@ export default class TravelPlan extends Component {
 
   deleteDestination = async id => {
     const tripId = this.state.trip._id;
-    const deletedDestination = await this.tripService.deleteDestination(
-      id,
-      tripId
-    );
+    const updatedTrip = await this.tripService.deleteDestination(id, tripId);
+
+    const viewport = this.setViewport(updatedTrip);
 
     this.setState({
-      trip: {
-        ...this.state.trip,
-        destinations: this.state.trip.destinations.filter(
-          dest => dest._id !== id
-        )
-      }
+      trip: updatedTrip,
+      viewport
     });
   };
 
@@ -186,8 +239,6 @@ export default class TravelPlan extends Component {
     }
   };
 
-  mapRef = React.createRef();
-
   handleViewportChange = viewport => {
     this.setState({
       viewport: { ...this.state.viewport, ...viewport }
@@ -196,6 +247,7 @@ export default class TravelPlan extends Component {
 
   // if you are happy with Geocoder default settings, you can just use handleViewportChange directly
   handleGeocoderViewportChange = viewport => {
+    debugger;
     const geocoderDefaultOverrides = { transitionDuration: 1000 };
     return this.handleViewportChange({
       ...viewport,
@@ -204,6 +256,7 @@ export default class TravelPlan extends Component {
   };
 
   handleGeoResult = event => {
+    debugger;
     const dest = {};
     dest.name = event.result.text;
     dest.longitude = event.result.geometry.coordinates[0];
@@ -243,7 +296,6 @@ export default class TravelPlan extends Component {
                     mapRef={this.mapRef}
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                     onResult={this.handleGeoResult}
-                    onViewportChange={this.handleGeocoderViewportChange}
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                   />
                 </figure>

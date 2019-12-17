@@ -4,8 +4,12 @@ const Schema = mongoose.Schema;
 const tripSchema = new Schema({
   name: {
     type: String,
-    unique: true,
     required: "Tripname is required"
+  },
+  country: {
+    name: { type: String },
+    latitude: { type: Number },
+    longitude: { type: Number }
   },
   description: String,
   tripPicture: {
@@ -23,7 +27,6 @@ const tripSchema = new Schema({
       ref: "Membership"
     }
   ],
-
   destinations: [
     {
       type: Schema.ObjectId,

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TripService from "../api/tripService";
 import Trip from "../components/Trip";
-import NothingFound from "../components/NothingFound";
+import NotFound from "../components/NotFound";
 import Loader from "../components/Loader";
 
 export default class Dashboard extends Component {
@@ -31,7 +31,7 @@ export default class Dashboard extends Component {
         return <Trip key={i} {...trip} />;
       });
     } else {
-      return <NothingFound />;
+      return <NotFound />;
     }
   };
 
@@ -39,11 +39,7 @@ export default class Dashboard extends Component {
     if (this.state.isLoading) return <Loader className="full-screen-loader" />;
     return (
       <section className="section">
-        <div className="container">
-          <div className="columns">
-            <div className="column is-half">{this.renderTrips()}</div>
-          </div>
-        </div>
+        <div className="container">{this.renderTrips()}</div>
       </section>
     );
   }

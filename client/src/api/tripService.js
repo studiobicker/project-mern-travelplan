@@ -14,11 +14,20 @@ export default class tripService {
   };
 
   create = async payload => {
-    const { name, description } = payload;
+    const { name, description, selectedLatLng } = payload;
     const { data } = await this.service.post("trip/createTrip", {
       name,
-      description
+      description,
+      country: selectedLatLng.label,
+      latitude: selectedLatLng.value[0],
+      longitude: selectedLatLng.value[1]
     });
+    return data;
+  };
+
+  setCurrentTrip = async id => {
+    debugger;
+    const { data } = await this.service.get(`trip/setCurrentTrip/${id}`);
     return data;
   };
 

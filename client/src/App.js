@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import NewTrip from "./pages/NewTrip";
+import Trip from "./pages/Trip";
 import TravelPlan from "./pages/TravelPlan";
 import TripMembers from "./pages/TripMembers";
 import AcceptInvitation from "./pages/AcceptInvitation";
@@ -22,13 +23,13 @@ export default class App extends Component {
     super();
     this.state = {
       user: null,
+      myTrips: null,
       isLoadingUser: true
     };
     this.authService = new AuthService();
   }
 
   componentDidMount = async () => {
-    debugger;
     let user;
     try {
       user = await this.authService.isLoggedIn();
@@ -40,6 +41,7 @@ export default class App extends Component {
   };
 
   setUserState = user => {
+    debugger;
     this.setState({ user, isLoadingUser: false });
   };
 
@@ -56,10 +58,14 @@ export default class App extends Component {
   render() {
     if (this.state.isLoadingUser)
       return <Loader className="full-screen-loader" />;
-
+    debugger;
     return (
       <div className="App">
-        <NavBar user={this.state.user} logout={this.logout} />
+        <NavBar
+          user={this.state.user}
+          setUserState={this.setUserState}
+          logout={this.logout}
+        />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route
@@ -88,8 +94,10 @@ export default class App extends Component {
           <PrivateRoute
             path="/add-trip"
             user={this.state.user}
+            setUserState={this.setUserState}
             component={NewTrip}
           />
+          <Route path="/trip/:id" user={this.state.user} component={Trip} />
           <Route
             path="/travelplan/:id"
             user={this.state.user}

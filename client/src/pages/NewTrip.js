@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import TripService from "../api/tripService";
+import CountryService from "../api/countryService";
+import Loader from "../components/Loader";
+import Select from "react-select";
 
 export default class NewTrip extends Component {
   constructor() {
@@ -7,11 +10,32 @@ export default class NewTrip extends Component {
     this.state = {
       name: "",
       description: "",
-      err: null
+      selectedLatLng: null,
+      countries: null,
+      err: null,
+      isLoading: true
     };
 
     this.tripService = new TripService();
+    this.countryService = new CountryService();
   }
+
+  componentDidMount = async () => {
+    try {
+      const countries = await this.countryService.getAll();
+      const countryArray = countries.map(country => {
+        return { value: country.latlng, label: country.name };
+      });
+
+      this.setState({ countries: countryArray, isLoading: false });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  handleSelectChange = selectedLatLng => {
+    this.setState({ selectedLatLng });
+  };
 
   onChangeHandler = e => {
     const { name, value } = e.target;
@@ -22,17 +46,25 @@ export default class NewTrip extends Component {
     e.preventDefault();
     debugger;
     try {
-      const trip = await this.tripService.create(this.state);
-      this.props.history.push(`/travelplan/${trip._id}`);
+      const updatedUser = await this.tripService.create(this.state);
+      this.props.setUserState(updatedUser);
+      debugger;
+      this.props.history.push(`/trip/${updatedUser.currentTrip.trip._id}`);
     } catch (err) {
       const { message } = err.response.data;
       this.setState({ err: message });
     }
   };
   render() {
+    const { selectedLatLng, countries } = this.state;
+
+    if (this.state.isLoading) return <Loader className="full-screen-loader" />;
     return (
       <section className="section">
         <div className="container">
+          <div className="content has-text-centered">
+            <h2 className="Subtitle">New Trip</h2>
+          </div>
           <div className="columns is-centered">
             <div className="column is-half">
               <form onSubmit={this.onSubmitHandler}>
@@ -51,6 +83,20 @@ export default class NewTrip extends Component {
                         required
                       />
                     </div>
+                  </div>
+                  <div className="field">
+                    <label className="label" htmlFor="name">
+                      Which country do you want to visit?
+                    </label>
+                    <Select
+                      value={selectedLatLng}
+                      onChange={this.handleSelectChange}
+                      options={countries}
+                    />
+                    <p className="help">
+                      If you plan to visit multiple countries, just fill in the
+                      first one. Don't worry, you can change this later.
+                    </p>
                   </div>
                   <div className="field">
                     <label className="label" htmlFor="description">

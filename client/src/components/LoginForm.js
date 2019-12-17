@@ -41,7 +41,7 @@ export default function LoginForm({ onSubmitHandler, onChangeHandler }) {
       </div>
       <div className="field is-grouped is-grouped-right">
         <div className="control">
-          <button className="button is-link">Log in</button>
+          <button className="button  is-link">Log in</button>
         </div>
       </div>
     </form>

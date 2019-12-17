@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavBarItems from "../components/NavBar";
 
 export default function Home() {
   return (

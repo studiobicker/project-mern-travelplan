@@ -39,8 +39,11 @@ router.post("/add/:id", confirmAuthor, async (req, res, next) => {
       tripId,
       { $push: { destinations: newDestination._id } },
       { new: true }
-    );
-    res.status(200).json(newDestination);
+    ).populate({
+      path: "destinations",
+      options: { sort: { sequence: 1 } }
+    });
+    res.status(200).json(updatedTrip);
   } catch (err) {
     res
       .status(500)
@@ -58,13 +61,16 @@ router.post("/remove/:id", confirmAuthor, async (req, res, next) => {
       tripId,
       { $pull: { destinations: destinationId } },
       { new: true }
-    );
+    ).populate({
+      path: "destinations",
+      options: { sort: { sequence: 1 } }
+    });
 
     const deletedDestination = await Destination.findByIdAndDelete(
       destinationId
     );
 
-    res.status(200).json({ message: "OK" });
+    res.status(200).json(updatedTrip);
   } catch (err) {
     res
       .status(500)

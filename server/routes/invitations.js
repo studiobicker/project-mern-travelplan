@@ -8,38 +8,8 @@ const Level = require("../models/Level");
 const sendEmail = require("./utils/sendEmail");
 const crypto = require("crypto");
 
-async function confirmCreator(req, res, next) {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    debugger;
-    if (trip.creator.equals(req.session.user._id)) next();
-    else
-      res
-        .status(403)
-        .json({ message: "You are not authorized to perform this operation" });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-}
-
-async function confirmAccess(req, res, next) {
-  try {
-    const members = await Membership.find({ trip: req.params.id }).populate(
-      "user"
-    );
-    for (let i = 0; i < members.length; i++) {
-      if (members[i].user.equals(req.session.user._id)) {
-        next();
-        return false;
-      }
-    }
-    res
-      .status(403)
-      .json({ message: "You are not authorized to perform this operation" });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-}
+const isMember = require("./utils/isMember");
+const isOwner = require("./utils/isOwner");
 
 router.get("/accept/:id", async (req, res, next) => {
   const uuid = req.params.id;
@@ -103,7 +73,8 @@ router.get("/compare/:id", async (req, res, next) => {
   }
 });
 
-router.post("/send/:id", confirmCreator, async (req, res, next) => {
+router.post("/send/:id", isMember, async (req, res, next) => {
+  //ToDo check if member has sufficient rights for sending an invitation
   const { email, level } = req.body;
   const tripId = req.params.id;
   const user = req.session.user;

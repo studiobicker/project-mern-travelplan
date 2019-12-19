@@ -1144,7 +1144,7 @@ a.has-text-danger:hover, a.has-text-danger:focus {
 .box {
   background-color: white;
   border-radius: 16px;
-  box-shadow: 0;
+  box-shadow: none;
   color: #4a4a4a;
   display: block;
   padding: 2rem; }
@@ -4160,7 +4160,7 @@ a.list-item {
     display: flex; }
 
 .modal-background {
-  background-color: rgba(10, 10, 10, 0.86); }
+  background-color: rgba(10, 10, 10, 0.7); }
 
 .modal-content,
 .modal-card {
@@ -8193,7 +8193,7 @@ label.panel-block {
   background-size: cover; }
 
 .overlay {
-  background-color: rgba(11, 87, 109, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
   height: 100vh;
   width: 100%;
   position: absolute; }
@@ -8226,12 +8226,8 @@ label.panel-block {
     flex: 3; }
 
 .destLi {
-  background-color: #fafafa;
-  padding: 5px 20px;
-  margin-bottom: 10px; }
-
-.memberLi {
-  margin-bottom: 5px; }
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1); }
 
 .deleteMember {
   margin-left: 20px;
@@ -8272,43 +8268,28 @@ label.panel-block {
 .navbar-item.account {
   display: block; }
 
-.memberList {
-  display: flex; }
+.memberLi {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid; }
 
-.button.is-round {
-  border-radius: 50%; }
+.memberLi .image {
+  margin-right: 10px; }
 
-.button.is-image {
-  padding: 0; }
-
-@media screen and (min-width: 1024px) {
-  .db-duo {
-    display: flex; }
-  .db-side {
-    flex: 0 0 calc(10.5rem + 1.5rem);
-    padding: 2rem 0 2rem 0; }
-  .db-lead {
-    margin-right: -2rem;
-    padding: 2rem;
-    overflow: hidden;
-    flex-grow: 1;
-    flex-shrink: 1; } }
-
-.messageboard {
+.chatroom {
   display: flex;
   flex-direction: column;
-  height: 65%;
+  height: 80vh;
   width: 100%; }
 
 .messages {
-  height: 65%;
+  height: 100%;
   width: 100%;
   transform: translateZ(0px);
   overflow: auto; }
-
-.navbar-start {
-  flex-grow: 1;
-  justify-content: center; }
 
 .currentWeather {
   border-top: 1px dashed #fff;
@@ -8375,3 +8356,10 @@ label.panel-block {
   position: absolute;
   right: 20px;
   top: 16px; }
+
+.notification.is-link {
+  background: #f25155;
+  background: linear-gradient(48deg, #f25155 16%, #f57679 67%); }
+
+.tripCard {
+  cursor: pointer; }

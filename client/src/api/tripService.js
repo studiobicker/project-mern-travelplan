@@ -9,7 +9,7 @@ export default class tripService {
   }
 
   getMyTrips = async () => {
-    const { data } = await this.service.get("/trip/getTripsByUser");
+    const { data } = await this.service.get("/trip/getMyTrips");
     return data;
   };
 
@@ -31,8 +31,8 @@ export default class tripService {
     return data;
   };
 
-  getTripById = async id => {
-    const { data } = await this.service.get(`trip/getTripById/${id}`);
+  getMyTrip = async id => {
+    const { data } = await this.service.get(`trip/getMyTrip/${id}`);
     return data;
   };
 
@@ -59,6 +59,7 @@ export default class tripService {
   };
 
   sendInvitation = async (payload, id) => {
+    debugger;
     const { email, level } = payload;
     const { data } = await this.service.post(`trip/invitation/send/${id}`, {
       email,

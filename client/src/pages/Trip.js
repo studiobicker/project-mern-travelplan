@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import TripService from "../api/tripService";
 import Loader from "../components/Loader";
 import WeatherService from "../api/weatherService";
+import Member from "../components/Member";
+import MapOnly from "../components/MapOnly";
+import DestinationsOnly from "../components/DestinationsOnly";
+import SendInvitation from "../components/SendInvitation";
 
 export default class Trip extends Component {
   constructor() {
@@ -11,7 +15,9 @@ export default class Trip extends Component {
       level: null,
       weather: null,
       isLoadingTrip: true,
-      err: null
+      err: null,
+      msg: null,
+      showModal: false
     };
     this.tripService = new TripService();
     this.weatherService = new WeatherService();
@@ -20,14 +26,12 @@ export default class Trip extends Component {
   componentDidMount = async () => {
     const id = this.props.match.params.id;
     try {
-      debugger;
-      const userTrip = await this.tripService.getTripById(id);
+      const userTrip = await this.tripService.getMyTrip(id);
       const currentWeather = await this.weatherService.getWeather(
         userTrip.trip.country.latitude,
         userTrip.trip.country.longitude
       );
 
-      debugger;
       this.setState({
         trip: userTrip.trip,
         level: userTrip.level,
@@ -36,6 +40,42 @@ export default class Trip extends Component {
       });
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  toggleModal = () => {
+    this.setState({ showModal: !this.state.showModal });
+  };
+
+  listOfMembers = () => {
+    return this.state.trip.members.map((member, i) => {
+      return (
+        <Member
+          key={i}
+          index={i}
+          member={member}
+          deleteMember={this.deleteMember}
+        />
+      );
+    });
+  };
+
+  sendInvitation = async invitation => {
+    //the invitation parameter is the state of Modal
+    try {
+      const id = this.props.match.params.id;
+      const invitationSend = await this.tripService.sendInvitation(
+        invitation,
+        id
+      );
+
+      this.setState({
+        showModal: false,
+        msg: invitationSend.message
+      });
+    } catch (err) {
+      const { message } = err.response.data;
+      this.setState({ err: message, showModal: false });
     }
   };
 
@@ -70,18 +110,60 @@ export default class Trip extends Component {
                 </article>
               </div>
               <div className="tile">
-                <div className="tile is-parent is-vertical">
-                  <article className="tile is-child box"></article>
-                  <article className="tile is-child box"></article>
+                <div className="tile is-parent">
+                  <article className="tile is-child box">
+                    <div className="content">
+                      <h3 className="subtitle">Members</h3>
+                    </div>
+                    <div className="member">
+                      <ul className="memberList">{this.listOfMembers()}</ul>
+                      <br />
+                      {this.state.level.levelnum <= 5 && (
+                        <button
+                          className="button is-link is-fullwidth"
+                          onClick={this.toggleModal}
+                        >
+                          <span className="icon">
+                            <i className="fas fa-plus"></i>
+                          </span>
+                          <span>Invite people</span>
+                        </button>
+                      )}
+                    </div>
+                    {this.state.showModal && (
+                      <SendInvitation
+                        toggleModal={this.toggleModal}
+                        sendInvitation={this.sendInvitation}
+                      />
+                    )}
+                    {this.state.err && (
+                      <article class="message is-error">
+                        <div class="message-body">{this.state.err}</div>
+                      </article>
+                    )}
+                    {this.state.msg && (
+                      <article class="message is-success">
+                        <div class="message-body">{this.state.msg}</div>
+                      </article>
+                    )}
+                  </article>
                 </div>
                 <div className="tile is-parent">
-                  <article className="tile is-child box"></article>
+                  <MapOnly
+                    trip={this.state.trip}
+                    level={this.state.level}
+                    mode="readOnly"
+                  />
                 </div>
               </div>
             </div>
+
             <div className="tile is-parent">
-              <article className="tile is-child content box">
-                <h3 className="subtitle">Members</h3>
+              <article className="tile is-child notification is-primary">
+                <div className="content">
+                  <h3 className="subtitle">Destinations</h3>
+                </div>
+                <DestinationsOnly trip={this.state.trip} readMode={true} />
               </article>
             </div>
           </div>

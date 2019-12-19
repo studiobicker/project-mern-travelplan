@@ -143,9 +143,8 @@ export default class TravelPlan extends Component {
           destination={destination}
           deleteDestination={this.deleteDestination}
           changeOrderDestination={this.changeOrderDestination}
-        >
-          <span className="tag is-primary">{destination.name}</span>
-        </Destination>
+          readMode={false}
+        ></Destination>
       );
     });
   };
@@ -297,13 +296,15 @@ export default class TravelPlan extends Component {
               </article>
             </div>
             <div className="tile is-parent">
-              <article className="tile is-child content box">
-                <h3 className="subtitle">Add a destination</h3>
-                <p className="is-size-7">
-                  <i className="far fa-lightbulb"></i> Use the search field on
-                  the map canvas
-                </p>
-                <br />
+              <article className="tile is-child box">
+                <div className="content">
+                  <h3 className="subtitle">Add a destination</h3>
+                  <p className="is-size-7">
+                    <i className="far fa-lightbulb"></i> Use the search field on
+                    the map canvas
+                  </p>
+                </div>
+
                 <ul>{this.listOfDestinations()}</ul>
               </article>
             </div>

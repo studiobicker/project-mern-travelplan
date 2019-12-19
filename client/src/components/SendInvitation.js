@@ -33,7 +33,7 @@ export default class SendInvitation extends Component {
             </header>
             <section className="modal-card-body">
               <div className="field">
-                <label class="label">Who would you like to invite?</label>
+                <label className="label">Who would you like to invite?</label>
                 <p className="control">
                   <input
                     className="input"

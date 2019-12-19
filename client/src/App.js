@@ -5,10 +5,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
-import NewTrip from "./pages/NewTrip";
 import Trip from "./pages/Trip";
 import TravelPlan from "./pages/TravelPlan";
-import TripMembers from "./pages/TripMembers";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import Messages from "./pages/Messages";
 import PrivateRoute from "./components/PrivateRoute";
@@ -80,6 +78,7 @@ export default class App extends Component {
           <PrivateRoute
             path="/dashboard"
             user={this.state.user}
+            setUserState={this.setUserState}
             component={Dashboard}
           />
           <PrivateRoute
@@ -88,22 +87,11 @@ export default class App extends Component {
             setUserState={this.setUserState}
             component={Profile}
           />
-          <PrivateRoute
-            path="/add-trip"
-            user={this.state.user}
-            setUserState={this.setUserState}
-            component={NewTrip}
-          />
           <Route path="/trip/:id" user={this.state.user} component={Trip} />
           <Route
             path="/travelplan/:id"
             user={this.state.user}
             component={TravelPlan}
-          />
-          <Route
-            path="/tripmembers/:id"
-            user={this.state.user}
-            component={TripMembers}
           />
           <Route
             path="/invite/:task"

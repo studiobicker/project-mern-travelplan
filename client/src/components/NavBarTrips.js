@@ -36,6 +36,7 @@ export default class NavBarTrips extends Component {
     try {
       const updatedUser = await this.tripService.setCurrentTrip(id);
       this.props.setUserState(updatedUser);
+      debugger;
       this.props.history.push(`/trip/${updatedUser.currentTrip.trip._id}`);
     } catch (err) {
       console.log(err);
@@ -46,7 +47,10 @@ export default class NavBarTrips extends Component {
     if (this.props.user.currentTrip) {
       return (
         <div className="navbar-item has-dropdown is-hoverable">
-          <Link className="navbar-link" to="/profile">
+          <Link
+            className="navbar-link"
+            to={`/trip/${this.props.user.currentTrip.trip._id}`}
+          >
             {this.props.user.currentTrip.trip.name}
           </Link>
           <div className="navbar-dropdown">

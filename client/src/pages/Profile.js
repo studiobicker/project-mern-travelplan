@@ -16,8 +16,9 @@ export default function Profile({ user, setUserState }) {
     e.preventDefault();
     try {
       const data = new FormData(form.current);
-      debugger;
+
       const user = await uploadService.uploadProfile(data);
+      debugger;
       setUserState(user);
       setError(null);
     } catch (err) {

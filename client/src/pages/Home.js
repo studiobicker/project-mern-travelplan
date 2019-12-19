@@ -9,7 +9,7 @@ export default function Home() {
           <div className="columns is-centered">
             <div className="column is-half">
               <h1 className="title is-2 has-text-white">
-                WHERE ARE YOU OFF TO NEXT?
+                Where are you off to next?
               </h1>
               <h2 className="subtitle has-text-white">
                 Plan your vacation with trip builder! Our travel planning tool

@@ -58,8 +58,7 @@ export default class RegisterAccept extends Component {
                   >
                     <strong>sign in</strong>
                   </Link>{" "}
-                  if you already have an account. Sign in to Or if you don't
-                  have an account.
+                  if you already have an account.
                 </p>
                 <RegisterForm
                   onSubmitHandler={this.onSubmitHandler}

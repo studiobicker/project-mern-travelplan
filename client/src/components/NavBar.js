@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import NavbarBurger from "./NavBarBurger";
-import NavBarTrips from "./NavBarTrips";
 import logo from "../images/tripbuilder.svg";
 
 export default class NavBar extends Component {
@@ -38,11 +37,6 @@ export default class NavBar extends Component {
             <Link className="navbar-item" to="/dashboard">
               <img src={logo} className="logo" alt="logo" />
             </Link>
-            <NavBarTrips
-              user={this.props.user}
-              setUserState={this.props.setUserState}
-            />
-
             <NavbarBurger
               active={this.state.activeMenu}
               toggleMenu={this.toggleMenu}
@@ -55,32 +49,21 @@ export default class NavBar extends Component {
               this.state.activeMenu ? "is-active" : ""
             }`}
           >
-            {this.props.user.currentTrip && (
+            {this.props.user.currentTripId && (
               <div className="navbar-start">
                 <Link
                   className="navbar-item"
-                  to={`/tripmembers/${this.props.user.currentTrip.trip._id}`}
+                  to={`/trip/${this.props.user.currentTripId}`}
                   onClick={this.closeMenu}
                 >
                   <span className="icon">
-                    <i className="far fa-compass"></i>
+                    <i className="fas fa-globe-americas"></i>
                   </span>
-                  <span>Explore</span>
+                  <span>My trip</span>
                 </Link>
                 <Link
                   className="navbar-item"
-                  to={`/tripmembers/${this.props.user.currentTrip.trip._id}`}
-                  onClick={this.closeMenu}
-                >
-                  <span className="icon">
-                    <i className="far fa-bookmark"></i>
-                  </span>
-                  <span>Saved</span>
-                </Link>
-
-                <Link
-                  className="navbar-item"
-                  to={`/travelplan/${this.props.user.currentTrip.trip._id}`}
+                  to={`/travelplan/${this.props.user.currentTripId}`}
                   onClick={this.closeMenu}
                 >
                   <span className="icon">
@@ -91,7 +74,7 @@ export default class NavBar extends Component {
 
                 <Link
                   className="navbar-item"
-                  to={`/messages/${this.props.user.currentTrip.trip._id}`}
+                  to={`/messages/${this.props.user.currentTripId}`}
                   onClick={this.closeMenu}
                 >
                   <span className="icon">

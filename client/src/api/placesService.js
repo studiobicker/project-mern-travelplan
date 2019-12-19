@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export default class WeatherService {
+export default class PlacesService {
   constructor() {
     this.service = axios.create({
-      baseURL: process.env.REACT_APP_WEATHER_API_URL
+      baseURL: process.env.REACT_APP_PLACES_API_URL
     });
   }
 

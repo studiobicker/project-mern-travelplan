@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const Trip = require("../models/Trip");
-const Membership = require("../models/Membership");
 
 const bcrypt = require("bcrypt");
 const saltRounds = 10; // cost factor for producing the hash
@@ -37,18 +35,16 @@ router.post("/register", async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  const { email, password } = req.body;
   debugger;
+  const { email, password } = req.body;
+
   if (!email || !password) {
     res.status(400).json({ message: "Please enter your login credentials" });
     return false;
   }
 
   try {
-    let user = await User.findOne({ email }).populate({
-      path: "memberships currentTrip",
-      populate: { path: "trip" }
-    });
+    let user = await User.findOne({ email });
 
     if (user) {
       const correctPassword = await bcrypt.compare(
@@ -76,11 +72,7 @@ router.get("/logout", (req, res, next) => {
 
 router.get("/isLoggedIn", async (req, res, next) => {
   if (req.session.user) {
-    const user = await User.findById(req.session.user).populate({
-      path: "memberships currentTrip",
-      populate: { path: "trip" }
-    });
-    res.status(200).json(user);
+    res.status(200).json(req.session.user);
   } else {
     res.status(401).json({ message: "Get outta here" });
   }

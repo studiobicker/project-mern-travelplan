@@ -14,7 +14,8 @@ const tripSchema = new Schema({
   description: String,
   tripPicture: {
     type: String,
-    default: "https://media.giphy.com/media/t6conLiC13yyaqgijR/giphy.gif"
+    default:
+      "https://res.cloudinary.com/drs7qiyrp/image/upload/v1576756979/travel_hwku04.jpg"
   },
   creator: {
     type: Schema.ObjectId,

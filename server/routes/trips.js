@@ -53,10 +53,7 @@ router.post("/createTrip", async (req, res, next) => {
         $set: { currentTrip: newMember._id }
       },
       { new: true }
-    ).populate({
-      path: "memberships currentTrip",
-      populate: { path: "trip" }
-    });
+    );
 
     const updatedTrip = await Trip.findByIdAndUpdate(
       newTrip._id,
@@ -72,7 +69,7 @@ router.post("/createTrip", async (req, res, next) => {
   }
 });
 
-router.get("/getTripsByUser", async (req, res, next) => {
+router.get("/getMyTrips", async (req, res, next) => {
   try {
     const user = await User.findById(req.session.user._id).populate({
       path: "memberships",
@@ -87,31 +84,7 @@ router.get("/getTripsByUser", async (req, res, next) => {
   }
 });
 
-router.get("/setCurrentTrip/:id", isMember, async (req, res, next) => {
-  const tripId = req.params.id;
-  debugger;
-  try {
-    const membership = await Membership.findOne({
-      user: req.session.user,
-      trip: tripId
-    });
-    let updatedUser = await User.findByIdAndUpdate(
-      req.session.user,
-      { $set: { currentTrip: membership._id } },
-      { new: true }
-    ).populate({
-      path: "memberships currentTrip",
-      populate: { path: "trip" }
-    });
-
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json({ message: err });
-    console.log(err);
-  }
-});
-
-router.get("/getTripById/:id", isMember, async (req, res, next) => {
+router.get("/getMyTrip/:id", isMember, async (req, res, next) => {
   const tripId = req.params.id;
   try {
     const membership = await Membership.findOne({
@@ -120,14 +93,33 @@ router.get("/getTripById/:id", isMember, async (req, res, next) => {
     }).populate({
       path: "trip",
       populate: {
-        path: "destinations members",
+        path: "destinations members messageboard",
         options: {
           sort: { sequence: 1 }
-        }
+        },
+        populate: { path: "user author" }
       }
     });
 
     res.status(200).json(membership);
+  } catch (err) {
+    res.status(500).json({ message: err });
+    console.log(err);
+  }
+});
+
+router.get("/setCurrentTrip/:id", isMember, async (req, res, next) => {
+  const tripId = req.params.id;
+  debugger;
+  try {
+    let updatedUser = await User.findByIdAndUpdate(
+      req.session.user,
+      { $set: { currentTripId: tripId } },
+      { new: true }
+    );
+
+    req.session.user = updatedUser;
+    res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json({ message: err });
     console.log(err);
@@ -168,50 +160,6 @@ router.get("/getTripDestinations/:id", isMember, async (req, res, next) => {
         path: "destinations",
         options: {
           sort: { sequence: 1 }
-        }
-      }
-    });
-
-    res.status(200).json(membership);
-  } catch (err) {
-    res.status(500).json({ message: err });
-    console.log(err);
-  }
-});
-
-router.get("/getTripMembers/:id", isMember, async (req, res, next) => {
-  const tripId = req.params.id;
-  try {
-    const membership = await Membership.findOne({
-      user: req.session.user._id,
-      trip: tripId
-    }).populate({
-      path: "trip",
-      populate: {
-        path: "members",
-        populate: {
-          path: "user"
-        }
-      }
-    });
-    res.status(200).json(membership);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-});
-
-router.get("/getTripMessages/:id", isMember, async (req, res, next) => {
-  const tripId = req.params.id;
-  try {
-    const membership = await Membership.findOne({
-      user: req.session.user._id,
-      trip: tripId
-    }).populate({
-      path: "trip",
-      populate: {
-        path: "messageboard",
-        options: {
-          created: { sequence: 1 }
         }
       }
     });

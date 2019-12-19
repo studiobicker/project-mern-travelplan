@@ -6,7 +6,7 @@ $title-family: $family-secondary;
 $subtitle-weight: 600;
 $box-padding: 2rem;
 $box-radius: 16px;
-$box-shadow: 0;
+$box-shadow: none;
 
 $notification-radius: 16px;
 $notification-padding: 2rem;
@@ -26,6 +26,7 @@ $navbar-padding-vertical: 0.5rem;
 $navbar-padding-horizontal: 1.5rem;
 
 $modal-card-head-background-color: #fff;
+$modal-background-background-color: rgba(10, 10, 10, 0.7);
 // Update Bulma's global variables
 
 $primary: $teal;
@@ -45,7 +46,7 @@ $link: $orange;
 }
 
 .overlay {
-  background-color: rgba(11, 87, 109, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
   height: 100vh;
   width: 100%;
   position: absolute;
@@ -93,13 +94,10 @@ $dimensions: 256 !default;
 }
 
 .destLi {
-  background-color: #fafafa;
-  padding: 5px 20px;
-  margin-bottom: 10px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-.memberLi {
-  margin-bottom: 5px;
-}
+
 .deleteMember {
   margin-left: 20px;
   display: none;
@@ -139,55 +137,39 @@ $dimensions: 256 !default;
     transform: rotate(360deg);
   }
 }
-
 .navbar-item.account {
   display: block;
 }
 
-.memberList {
+.memberLi {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid;
+}
+.memberLi .image {
+  margin-right: 10px;
 }
 
-.button.is-round {
-  border-radius: 50%;
-}
-.button.is-image {
-  padding: 0;
-}
-
-@media screen and (min-width: 1024px) {
-  .db-duo {
-    display: flex;
-  }
-  .db-side {
-    flex: 0 0 calc(10.5rem + 1.5rem);
-    padding: 2rem 0 2rem 0;
-  }
-  .db-lead {
-    margin-right: -2rem;
-    padding: 2rem;
-    overflow: hidden;
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-}
-.messageboard {
+.chatroom {
   display: flex;
   flex-direction: column;
-  height: 65%;
+  height: 80vh;
   width: 100%;
 }
 
 .messages {
-  height: 65%;
+  height: 100%;
   width: 100%;
   transform: translateZ(0px);
   overflow: auto;
 }
-.navbar-start {
-  flex-grow: 1;
-  justify-content: center;
-}
+// .navbar-start {
+//   flex-grow: 1;
+//   justify-content: center;
+// }
 
 //Weather icons
 
@@ -260,4 +242,17 @@ $dimensions: 256 !default;
   position: absolute;
   right: 20px;
   top: 16px;
+}
+
+.notification.is-link {
+  background: rgb(242, 81, 85);
+  background: linear-gradient(
+    48deg,
+    rgba(242, 81, 85, 1) 16%,
+    rgba(245, 118, 121, 1) 67%
+  );
+}
+
+.tripCard {
+  cursor: pointer;
 }

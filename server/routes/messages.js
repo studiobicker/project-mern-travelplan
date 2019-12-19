@@ -21,14 +21,14 @@ router.post("/add/:id", isMember, async (req, res, next) => {
       author: user,
       trip: tripId
     });
-    newMessage = await newMessage.populate("author");
+    updatedMessage = await Message.findById(newMessage._id).populate("author");
 
     const updatedTrip = await Trip.findByIdAndUpdate(
       tripId,
       { $push: { messageboard: newMessage._id } },
       { new: true }
     );
-    res.status(200).json(newMessage);
+    res.status(200).json(updatedMessage);
   } catch (err) {
     res
       .status(500)

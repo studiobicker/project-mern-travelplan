@@ -8274,7 +8274,7 @@ label.panel-block {
   justify-content: flex-start;
   align-items: center;
   padding: 6px 0;
-  border-top: 1px solid; }
+  border-top: 1px solid rgba(0, 0, 0, 0.1); }
 
 .memberLi .image {
   margin-right: 10px; }
@@ -8290,6 +8290,10 @@ label.panel-block {
   width: 100%;
   transform: translateZ(0px);
   overflow: auto; }
+
+.navbar-start {
+  flex-grow: 1;
+  justify-content: center; }
 
 .currentWeather {
   border-top: 1px dashed #fff;
@@ -8363,3 +8367,51 @@ label.panel-block {
 
 .tripCard {
   cursor: pointer; }
+
+.react-tabs {
+  -webkit-tap-highlight-color: transparent; }
+  .react-tabs__tab-list {
+    border-bottom: 1px solid #aaa;
+    margin: 0 0 10px;
+    padding: 0; }
+  .react-tabs__tab {
+    flex-grow: 1;
+    flex-shrink: 0;
+    border-bottom-color: #dbdbdb;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    color: #999999;
+    cursor: pointer; }
+    .react-tabs__tab--selected {
+      border-bottom-color: #0b576d;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      color: #0b576d; }
+    .react-tabs__tab__label {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding: 0.5em 1em;
+      vertical-align: top; }
+  .react-tabs__tab:hover {
+    border-bottom-color: #0b576d;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    color: #0b576d; }
+  .react-tabs__tab-panel {
+    display: none; }
+    .react-tabs__tab-panel--selected {
+      display: block; }
+
+.box.extended {
+  background: #0b576d;
+  background: linear-gradient(45deg, #0b576d 15%, #5b949d 75%);
+  color: #fff; }
+
+.box.extended .title {
+  color: #fff; }
+
+.bookmark {
+  position: absolute;
+  right: 20px;
+  top: 16px; }

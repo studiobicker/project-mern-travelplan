@@ -48,7 +48,6 @@ export default class TravelPlan extends Component {
 
   componentDidMount = async () => {
     try {
-      debugger;
       const trip = await this.props.trip;
       const level = await this.props.level;
 
@@ -66,17 +65,16 @@ export default class TravelPlan extends Component {
   };
 
   setViewport = trip => {
-    let coordinates = [];
-    trip.destinations.map((destination, i) => {
-      coordinates[i] = [destination.longitude, destination.latitude];
-    });
-
-    const line = lineString(coordinates);
-
-    const [minLng, minLat, maxLng, maxLat] = bbox(line);
-
     let viewport;
-    if (trip.destinations.length > 0) {
+    if (trip.destinations.length > 1) {
+      let coordinates = [];
+      trip.destinations.map((destination, i) => {
+        coordinates[i] = [destination.longitude, destination.latitude];
+      });
+
+      const line = lineString(coordinates);
+
+      const [minLng, minLat, maxLng, maxLat] = bbox(line);
       const { longitude, latitude, zoom } = new WebMercatorViewport(
         this.state.viewport
       ).fitBounds(

@@ -8,7 +8,6 @@ export default function Profile({ user, setUserState }) {
   const [err, setError] = useState(null);
 
   const changeHandler = async e => {
-    debugger;
     const { name, value } = e.target;
   };
 
@@ -18,16 +17,14 @@ export default function Profile({ user, setUserState }) {
       const data = new FormData(form.current);
 
       const user = await uploadService.uploadProfile(data);
-      debugger;
       setUserState(user);
       setError(null);
     } catch (err) {
-      debugger;
       const { message } = err.response.data;
       setError(message);
     }
   };
-  debugger;
+
   return (
     <section className="section">
       <div className="container">

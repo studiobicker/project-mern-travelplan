@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const Trip = require("../models/Trip");
 const Invitation = require("../models/Invitation");
-const Membership = require("../models/Membership");
+const Member = require("../models/Member");
 const Level = require("../models/Level");
 const sendEmail = require("./utils/sendEmail");
 const crypto = require("crypto");
@@ -17,13 +17,10 @@ router.get("/accept/:id", async (req, res, next) => {
   try {
     const invitation = await Invitation.findOne({ uuid });
 
-    const newMember = await Membership.create({
+    const newMember = await Member.create({
       user: req.session.user,
       trip: invitation.trip,
-      level: {
-        levelname: invitation.level.levelname,
-        levelnum: invitation.level.levelnum
-      }
+      level: invitation.level
     });
 
     const updatedTrip = await Trip.findByIdAndUpdate(
@@ -37,7 +34,7 @@ router.get("/accept/:id", async (req, res, next) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       req.session.user._id,
-      { $push: { memberships: newMember._id } },
+      { $push: { trips: invitation.trip } },
       { new: true }
     );
 
@@ -93,17 +90,11 @@ router.post("/send/:id", isMember, async (req, res, next) => {
     .digest("hex");
 
   try {
-    debugger;
-    const lookupLevel = await Level.findOne({ level });
-
     const newInvitation = await Invitation.create({
       uuid,
       email: hashedEmail,
       trip: tripId,
-      level: {
-        levelname: lookupLevel.name,
-        levelnum: lookupLevel.level
-      },
+      level,
       author: user
     });
 

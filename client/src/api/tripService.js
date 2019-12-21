@@ -36,28 +36,6 @@ export default class tripService {
     return data;
   };
 
-  getTripDestinations = async id => {
-    const { data } = await this.service.get(`trip/getTripDestinations/${id}`);
-    return data;
-  };
-
-  getTripMembers = async id => {
-    const { data } = await this.service.get(`trip/getTripMembers/${id}`);
-    return data;
-  };
-
-  getTripMessages = async id => {
-    const { data } = await this.service.get(`trip/getTripMessages/${id}`);
-    return data;
-  };
-
-  getInvitations = async id => {
-    const { data } = await this.service.get(
-      `trip/invitation/getTripInvitations/${id}`
-    );
-    return data;
-  };
-
   sendInvitation = async (payload, id) => {
     debugger;
     const { email, level } = payload;
@@ -88,6 +66,11 @@ export default class tripService {
 
   compareEmail = async id => {
     const { data } = await this.service.get(`trip/invitation/compare/${id}`);
+    return data;
+  };
+
+  getMyDestination = async id => {
+    const { data } = await this.service.get(`trip/destination/getById/${id}`);
     return data;
   };
 

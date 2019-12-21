@@ -1,12 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const checkEmail = email => {
-  const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-  const emailCheck = emailRegex.test(email);
-  return emailCheck;
-};
-
 const invitationSchema = new Schema({
   created: {
     type: Date,
@@ -26,14 +20,8 @@ const invitationSchema = new Schema({
     required: true
   },
   level: {
-    levelname: {
-      type: String,
-      required: true
-    },
-    levelnum: {
-      type: Number,
-      required: true
-    }
+    type: Number,
+    required: true
   },
   author: {
     type: Schema.ObjectId,

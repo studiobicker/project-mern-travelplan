@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Trip = require("../models/Trip");
-const Membership = require("../models/Membership");
+const Member = require("../models/Member");
 
 const isMember = require("./utils/isMember");
 const isOwner = require("./utils/isOwner");
@@ -37,20 +37,17 @@ router.post("/createTrip", async (req, res, next) => {
       tripPicture
     });
 
-    const newMember = await Membership.create({
+    const newMember = await Member.create({
       user: id,
       trip: newTrip._id,
-      level: {
-        levelname: "admin",
-        levelnum: 1
-      }
+      level: 1
     });
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
-        $push: { memberships: newMember._id },
-        $set: { currentTrip: newMember._id }
+        $push: { trips: newTrip._id },
+        $set: { currentTrip: newTrip._id }
       },
       { new: true }
     );
@@ -61,7 +58,7 @@ router.post("/createTrip", async (req, res, next) => {
       { new: true }
     );
 
-    res.status(200).json(updatedUser);
+    res.status(200).json(updatedTrip);
   } catch (err) {
     res
       .status(500)
@@ -71,12 +68,9 @@ router.post("/createTrip", async (req, res, next) => {
 
 router.get("/getMyTrips", async (req, res, next) => {
   try {
-    const user = await User.findById(req.session.user._id).populate({
-      path: "memberships",
-      populate: { path: "trip" }
-    });
+    const user = await User.findById(req.session.user._id).populate("trips");
     if (user) {
-      res.status(200).json(user.memberships);
+      res.status(200).json(user.trips);
     }
   } catch (err) {
     res.status(500).json({ message: err });
@@ -87,21 +81,19 @@ router.get("/getMyTrips", async (req, res, next) => {
 router.get("/getMyTrip/:id", isMember, async (req, res, next) => {
   const tripId = req.params.id;
   try {
-    const membership = await Membership.findOne({
-      user: req.session.user._id,
+    const myTrip = await Trip.findById(tripId).populate({
+      path: "destinations members messageboard",
+      options: {
+        sort: { sequence: 1 }
+      },
+      populate: { path: "user author" }
+    });
+    const myLevel = await Member.findOne({
+      user: req.session.user,
       trip: tripId
-    }).populate({
-      path: "trip",
-      populate: {
-        path: "destinations members messageboard",
-        options: {
-          sort: { sequence: 1 }
-        },
-        populate: { path: "user author" }
-      }
     });
 
-    res.status(200).json(membership);
+    res.status(200).json({ myTrip, myLevel });
   } catch (err) {
     res.status(500).json({ message: err });
     console.log(err);
@@ -110,7 +102,6 @@ router.get("/getMyTrip/:id", isMember, async (req, res, next) => {
 
 router.get("/setCurrentTrip/:id", isMember, async (req, res, next) => {
   const tripId = req.params.id;
-  debugger;
   try {
     let updatedUser = await User.findByIdAndUpdate(
       req.session.user,
@@ -131,43 +122,23 @@ router.get("/remove/:id", isOwner, async (req, res, next) => {
   const tripId = req.params.id;
 
   try {
-    const trip = await Trip.findById(tripId).populate("user");
-    const creatorId = trip.creator;
+    const deletedMember = await Member.findOneAndDelete({
+      trip: req.params.id,
+      user: req.session.user._id
+    });
 
-    const updatedUser = await User.findByIdAndUpdate(
-      creatorId,
-      { $pull: { trips: tripId } },
-      { new: true }
-    );
+    //ToDo a proper pull on user
+    // const updatedUser = await User.findByIdAndUpdate(
+    //   creatorId,
+    //   { $pull: { trips: tripId } },
+    //   { new: true }
+    // );
     const deletedTrip = await Trip.findByIdAndDelete(tripId);
     if (deletedTrip) {
       res.status(200).json({ message: "Trip deleted" });
     }
   } catch (err) {
     res.status(500).json({ message: err });
-  }
-});
-
-router.get("/getTripDestinations/:id", isMember, async (req, res, next) => {
-  const tripId = req.params.id;
-  try {
-    const membership = await Membership.findOne({
-      user: req.session.user._id,
-      trip: tripId
-    }).populate({
-      path: "trip",
-      populate: {
-        path: "destinations",
-        options: {
-          sort: { sequence: 1 }
-        }
-      }
-    });
-
-    res.status(200).json(membership);
-  } catch (err) {
-    res.status(500).json({ message: err });
-    console.log(err);
   }
 });
 

@@ -3,15 +3,22 @@ import axios from "axios";
 export default class PlacesService {
   constructor() {
     this.service = axios.create({
-      baseURL: process.env.REACT_APP_PLACES_API_URL
+      baseURL: process.env.REACT_APP_PROXY_URL
     });
   }
 
-  getWeather = async (lat, lng) => {
-    const appId = "66578334c5710fdd247d39820c38a8fe";
-    const { data } = await this.service.get(
-      `weather?lat=${lat}&lon=${lng}&units=metric&APPID=${appId}`
-    );
+  nearbyPlaces = async (location, radius, type, keyword) => {
+    debugger;
+    const mapKey = process.env.REACT_APP_MAP_KEY;
+    const { data } = await this.service.get("nearbySearch", {
+      params: {
+        location,
+        radius,
+        type,
+        keyword,
+        key: mapKey
+      }
+    });
     return data;
   };
 }

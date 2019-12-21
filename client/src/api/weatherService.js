@@ -8,7 +8,7 @@ export default class WeatherService {
   }
 
   getWeather = async (lat, lng) => {
-    const appId = "66578334c5710fdd247d39820c38a8fe";
+    const appId = process.env.REACT_APP_WEATHER_API_KEY;
     const { data } = await this.service.get(
       `weather?lat=${lat}&lon=${lng}&units=metric&APPID=${appId}`
     );

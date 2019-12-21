@@ -1,15 +1,17 @@
-const Membership = require("../../models/Membership");
+const Member = require("../../models/Member");
 
 const isMember = async (req, res, next) => {
   debugger;
   try {
-    const members = await Membership.find({ trip: req.params.id });
-    for (let i = 0; i < members.length; i++) {
-      if (members[i].user.equals(req.session.user._id)) {
-        next();
-        return false;
-      }
+    const member = await Member.findOne({
+      trip: req.params.id,
+      user: req.session.user._id
+    });
+    if (member) {
+      next();
+      return false;
     }
+
     res
       .status(403)
       .json({ message: "You are not authorized to perform this operation" });

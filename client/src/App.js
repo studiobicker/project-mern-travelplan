@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Trip from "./pages/Trip";
 import TravelPlan from "./pages/TravelPlan";
+import Destination from "./pages/Destination";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import Messages from "./pages/Messages";
 import PrivateRoute from "./components/PrivateRoute";
@@ -88,6 +89,11 @@ export default class App extends Component {
             component={Profile}
           />
           <Route path="/trip/:id" user={this.state.user} component={Trip} />
+          <Route
+            path="/destination/:id"
+            user={this.state.user}
+            component={Destination}
+          />
           <Route
             path="/travelplan/:id"
             user={this.state.user}

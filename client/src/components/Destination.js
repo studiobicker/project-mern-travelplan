@@ -13,7 +13,7 @@ export default function Destination({
     return (
       <li>
         <div className="destLi">
-          <Link to="#">{destination.name}</Link>
+          <Link to={`/destination/${destination._id}`}>{destination.name}</Link>
         </div>
       </li>
     );
@@ -30,7 +30,7 @@ export default function Destination({
             onClick={() => changeOrderDestination("down", index)}
           ></i>
 
-          <Link to="#">{destination.name}</Link>
+          <Link to={`/destination/${destination._id}`}>{destination.name}</Link>
           <span
             className="is-pulled-right"
             onClick={() => deleteDestination(destination._id)}

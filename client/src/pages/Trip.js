@@ -4,7 +4,7 @@ import Loader from "../components/Loader";
 import WeatherService from "../api/weatherService";
 import Member from "../components/Member";
 import MapOnly from "../components/MapOnly";
-import DestinationsOnly from "../components/DestinationsOnly";
+import Destination from "../components/Destination";
 import SendInvitation from "../components/SendInvitation";
 
 export default class Trip extends Component {
@@ -28,13 +28,13 @@ export default class Trip extends Component {
     try {
       const userTrip = await this.tripService.getMyTrip(id);
       const currentWeather = await this.weatherService.getWeather(
-        userTrip.trip.country.latitude,
-        userTrip.trip.country.longitude
+        userTrip.myTrip.country.latitude,
+        userTrip.myTrip.country.longitude
       );
 
       this.setState({
-        trip: userTrip.trip,
-        level: userTrip.level,
+        trip: userTrip.myTrip,
+        level: userTrip.myLevel,
         weather: currentWeather,
         isLoadingTrip: false
       });
@@ -50,12 +50,7 @@ export default class Trip extends Component {
   listOfMembers = () => {
     return this.state.trip.members.map((member, i) => {
       return (
-        <Member
-          key={i}
-          index={i}
-          member={member}
-          deleteMember={this.deleteMember}
-        />
+        <Member key={i} member={member} deleteMember={this.deleteMember} />
       );
     });
   };
@@ -118,7 +113,7 @@ export default class Trip extends Component {
                     <div className="member">
                       <ul className="memberList">{this.listOfMembers()}</ul>
                       <br />
-                      {this.state.level.levelnum <= 5 && (
+                      {this.state.level.level <= 5 && (
                         <button
                           className="button is-link is-fullwidth"
                           onClick={this.toggleModal}
@@ -163,7 +158,16 @@ export default class Trip extends Component {
                 <div className="content">
                   <h3 className="subtitle">Destinations</h3>
                 </div>
-                <DestinationsOnly trip={this.state.trip} readMode={true} />
+
+                {this.state.trip.destinations.map((destination, i) => (
+                  <ul>
+                    <Destination
+                      key={i}
+                      destination={destination}
+                      readMode={true}
+                    />
+                  </ul>
+                ))}
               </article>
             </div>
           </div>

@@ -4,7 +4,6 @@ import Loader from "../components/Loader";
 import Destination from "../components/Destination";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import { getBounds } from "../utils/functions";
 
 import MapGL, {
   Marker,
@@ -15,9 +14,8 @@ import MapGL, {
 } from "react-map-gl";
 import Geocoder from "react-map-gl-geocoder";
 import WebMercatorViewport from "viewport-mercator-project";
-
-// 3rd-party easing functions
-//import d3 from "d3-ease";
+import bbox from "@turf/bbox";
+import { lineString } from "@turf/helpers";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -36,16 +34,15 @@ const dataLayer = {
 };
 
 export default class TravelPlan extends Component {
-  debugger;
   constructor() {
     super();
     this.state = {
       trip: null,
-      userLevel: null,
+      level: null,
       isLoadingTrip: true,
       viewport: {
-        width: 400,
-        height: 400,
+        width: 800,
+        height: 520,
         longitude: 4.89066,
         latitude: 52.373169,
         zoom: 3
@@ -58,15 +55,15 @@ export default class TravelPlan extends Component {
   }
 
   componentDidMount = async () => {
+    debugger;
     const id = this.props.match.params.id;
     try {
-      const userTrip = await this.tripService.getTripDestinations(id);
-
-      const viewport = this.setViewport(userTrip.trip);
+      const userTrip = await this.tripService.getMyTrip(id);
+      const viewport = this.setViewport(userTrip.myTrip);
 
       this.setState({
-        trip: userTrip.trip,
-        userLevel: userTrip.level,
+        trip: userTrip.myTrip,
+        level: userTrip.myLevel,
         viewport,
         isLoadingTrip: false
       });
@@ -77,26 +74,31 @@ export default class TravelPlan extends Component {
 
   setViewport = trip => {
     debugger;
-    let longitudes = [];
-    let latitudes = [];
-    trip.destinations.map((destination, i) => {
-      longitudes[i] = parseFloat(destination.longitude);
-      latitudes[i] = parseFloat(destination.latitude);
-    });
-
-    const bounds = getBounds(longitudes, latitudes);
 
     let viewport;
-    if (trip.destinations.length > 0) {
+    if (trip.destinations.length > 1) {
+      let coordinates = [];
+      trip.destinations.map((destination, i) => {
+        coordinates[i] = [destination.longitude, destination.latitude];
+      });
+
+      const line = lineString(coordinates);
+      const [minLng, minLat, maxLng, maxLat] = bbox(line);
+
       const { longitude, latitude, zoom } = new WebMercatorViewport(
         this.state.viewport
-      ).fitBounds(bounds, {
-        padding: 100
-      });
+      ).fitBounds(
+        [
+          [minLng, minLat],
+          [maxLng, maxLat]
+        ],
+        {
+          padding: 40
+        }
+      );
       viewport = {
         ...this.state.viewport,
-        width: "100%",
-        height: "80vh",
+
         longitude,
         latitude,
         zoom,
@@ -107,14 +109,9 @@ export default class TravelPlan extends Component {
       viewport = {
         ...this.state.viewport,
         longitude: trip.country.longitude,
-        latitude: trip.country.latitude,
-        width: "100%",
-        height: "80vh",
-        transitionDuration: 1000,
-        transitionInterpolator: new FlyToInterpolator()
+        latitude: trip.country.latitude
       };
     }
-
     return viewport;
   };
 
@@ -135,6 +132,7 @@ export default class TravelPlan extends Component {
   };
 
   listOfDestinations = () => {
+    const readMode = this.state.level.level <= 5 ? false : true;
     return this.state.trip.destinations.map((destination, i) => {
       return (
         <Destination
@@ -143,7 +141,7 @@ export default class TravelPlan extends Component {
           destination={destination}
           deleteDestination={this.deleteDestination}
           changeOrderDestination={this.changeOrderDestination}
-          readMode={false}
+          readMode={readMode}
         ></Destination>
       );
     });
@@ -174,15 +172,17 @@ export default class TravelPlan extends Component {
   addDestination = async dest => {
     try {
       const tripId = this.state.trip._id;
+      debugger;
       const updatedTrip = await this.tripService.addDestination(dest, tripId);
-
-      const viewport = this.setViewport(updatedTrip);
+      debugger;
+      let viewport = this.setViewport(updatedTrip);
 
       this.setState({
         trip: updatedTrip,
         viewport
       });
     } catch (err) {
+      console.log(err);
       const { message } = err.response.data;
       this.setState({ err: message });
     }
@@ -192,7 +192,7 @@ export default class TravelPlan extends Component {
     const tripId = this.state.trip._id;
     const updatedTrip = await this.tripService.deleteDestination(id, tripId);
 
-    const viewport = this.setViewport(updatedTrip);
+    let viewport = this.setViewport(updatedTrip);
 
     this.setState({
       trip: updatedTrip,
@@ -286,25 +286,34 @@ export default class TravelPlan extends Component {
                       <Layer {...dataLayer} />
                     </Source>
                   </MapGL>
-                  <Geocoder
-                    mapRef={this.mapRef}
-                    mapboxApiAccessToken={MAPBOX_TOKEN}
-                    onResult={this.handleGeoResult}
-                    mapboxApiAccessToken={MAPBOX_TOKEN}
-                  />
+                  {this.state.level.level <= 5 && (
+                    <Geocoder
+                      mapRef={this.mapRef}
+                      mapboxApiAccessToken={MAPBOX_TOKEN}
+                      onResult={this.handleGeoResult}
+                      mapboxApiAccessToken={MAPBOX_TOKEN}
+                      language="en"
+                    />
+                  )}
                 </figure>
               </article>
             </div>
             <div className="tile is-parent">
               <article className="tile is-child box">
-                <div className="content">
-                  <h3 className="subtitle">Add a destination</h3>
-                  <p className="is-size-7">
-                    <i className="far fa-lightbulb"></i> Use the search field on
-                    the map canvas
-                  </p>
-                </div>
-
+                {this.state.level.level <= 5 && (
+                  <div className="content">
+                    <h3 className="subtitle">Add a destination</h3>
+                    <p className="is-size-7">
+                      <i className="far fa-lightbulb"></i> Use the search field
+                      on the map canvas
+                    </p>
+                  </div>
+                )}
+                {this.state.level.level > 5 && (
+                  <div className="content">
+                    <h3 className="subtitle">Destinations</h3>
+                  </div>
+                )}
                 <ul>{this.listOfDestinations()}</ul>
               </article>
             </div>

@@ -25,7 +25,7 @@ const tripSchema = new Schema({
   members: [
     {
       type: Schema.ObjectId,
-      ref: "Membership"
+      ref: "Member"
     }
   ],
   destinations: [

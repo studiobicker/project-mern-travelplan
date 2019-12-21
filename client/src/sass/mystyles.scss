@@ -147,7 +147,7 @@ $dimensions: 256 !default;
   justify-content: flex-start;
   align-items: center;
   padding: 6px 0;
-  border-top: 1px solid;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 .memberLi .image {
   margin-right: 10px;
@@ -166,10 +166,10 @@ $dimensions: 256 !default;
   transform: translateZ(0px);
   overflow: auto;
 }
-// .navbar-start {
-//   flex-grow: 1;
-//   justify-content: center;
-// }
+.navbar-start {
+  flex-grow: 1;
+  justify-content: center;
+}
 
 //Weather icons
 
@@ -255,4 +255,72 @@ $dimensions: 256 !default;
 
 .tripCard {
   cursor: pointer;
+}
+
+.react-tabs {
+  -webkit-tap-highlight-color: transparent;
+
+  &__tab-list {
+    border-bottom: 1px solid #aaa;
+    margin: 0 0 10px;
+    padding: 0;
+  }
+
+  &__tab {
+    flex-grow: 1;
+    flex-shrink: 0;
+    border-bottom-color: #dbdbdb;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    color: #999999;
+    cursor: pointer;
+
+    &--selected {
+      border-bottom-color: #0b576d;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      color: #0b576d;
+    }
+
+    &__label {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      padding: 0.5em 1em;
+      vertical-align: top;
+    }
+  }
+  &__tab:hover {
+    border-bottom-color: #0b576d;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    color: #0b576d;
+  }
+
+  &__tab-panel {
+    display: none;
+
+    &--selected {
+      display: block;
+    }
+  }
+}
+
+.box.extended {
+  background: rgb(11, 87, 109);
+  background: linear-gradient(
+    45deg,
+    rgba(11, 87, 109, 1) 15%,
+    rgba(91, 148, 157, 1) 75%
+  );
+  color: #fff;
+}
+.box.extended .title {
+  color: #fff;
+}
+
+.bookmark {
+  position: absolute;
+  right: 20px;
+  top: 16px;
 }

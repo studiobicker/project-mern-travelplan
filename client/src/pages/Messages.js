@@ -22,13 +22,11 @@ export default class Messages extends Component {
 
   componentDidMount = async () => {
     const id = this.props.match.params.id;
-    debugger;
     try {
       const userTrip = await this.tripService.getMyTrip(id);
-      debugger;
       this.setState({
-        trip: userTrip.trip,
-        userLevel: userTrip.level,
+        trip: userTrip.myTrip,
+        level: userTrip.myLevel,
         isLoadingTrip: false
       });
     } catch (err) {
@@ -51,9 +49,7 @@ export default class Messages extends Component {
   addMessage = async msg => {
     try {
       const tripId = this.state.trip._id;
-      debugger;
       const newMessage = await this.tripService.addMessage(msg, tripId);
-      debugger;
       this.setState({
         trip: {
           ...this.state.trip,
@@ -92,7 +88,6 @@ export default class Messages extends Component {
   };
 
   render() {
-    debugger;
     if (this.state.isLoadingTrip)
       return <Loader className="full-screen-loader" />;
     return (

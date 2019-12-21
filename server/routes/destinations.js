@@ -3,22 +3,32 @@ const router = express.Router();
 
 const Trip = require("../models/Trip");
 const Destination = require("../models/Destination");
+const Member = require("../models/Member");
+const Location = require("../models/Location");
 
-async function confirmAuthor(req, res, next) {
+const isMember = require("./utils/isMember");
+const isOwner = require("./utils/isOwner");
+
+router.get("/getById/:id", async (req, res, next) => {
+  const destinationId = req.params.id;
+
   try {
-    const trip = await Trip.findById(req.params.id);
-    debugger;
-    if (trip.creator.equals(req.session.user._id)) next();
-    else
-      res
-        .status(403)
-        .json({ message: "You are not authorized to perform this operation" });
+    const myDestination = await Destination.findById(destinationId).populate({
+      path: "locations"
+    });
+    const myLevel = await Member.findOne({
+      user: req.session.user,
+      trip: myDestination.trip
+    });
+
+    res.status(200).json({ myDestination, myLevel });
   } catch (err) {
     res.status(500).json({ message: err });
+    console.log(err);
   }
-}
+});
 
-router.post("/add/:id", confirmAuthor, async (req, res, next) => {
+router.post("/add/:id", isMember, async (req, res, next) => {
   const { name, latitude, longitude } = req.body;
   const tripId = req.params.id;
 
@@ -52,7 +62,7 @@ router.post("/add/:id", confirmAuthor, async (req, res, next) => {
   }
 });
 
-router.post("/remove/:id", confirmAuthor, async (req, res, next) => {
+router.post("/remove/:id", isMember, async (req, res, next) => {
   const { destinationId } = req.body;
   const tripId = req.params.id;
 
@@ -79,7 +89,7 @@ router.post("/remove/:id", confirmAuthor, async (req, res, next) => {
   }
 });
 
-router.post("/change/:id", confirmAuthor, async (req, res, next) => {
+router.post("/change/:id", isMember, async (req, res, next) => {
   const { destId, secondDestSeq, secondDestId, destSeq } = req.body;
   const tripId = req.params.id;
 

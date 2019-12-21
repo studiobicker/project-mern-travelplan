@@ -21,8 +21,8 @@ export default class Dashboard extends Component {
   componentDidMount = async () => {
     try {
       const myTrips = await this.tripService.getMyTrips();
-      this.setState({ myTrips, isLoading: false });
       debugger;
+      this.setState({ myTrips, isLoading: false });
     } catch (err) {
       console.log(err);
     }
@@ -45,7 +45,7 @@ export default class Dashboard extends Component {
         return (
           <Trip
             key={i}
-            {...trip}
+            trip={trip}
             onClickTripHandler={this.onClickTripHandler}
           />
         );
@@ -62,10 +62,7 @@ export default class Dashboard extends Component {
       const newTrip = await this.tripService.create(trip);
 
       this.setState({
-        myTrips: {
-          ...this.state.myTrips,
-          trips: this.state.myTrip.concat(newTrip)
-        },
+        myTrips: this.state.myTrips.concat(newTrip),
         showModal: false
       });
     } catch (err) {
@@ -78,19 +75,22 @@ export default class Dashboard extends Component {
     if (this.state.isLoading) return <Loader className="full-screen-loader" />;
     return (
       <section className="section">
-        <nav class="level">
+        <nav className="level">
           <div className="container">
-            <div class="level-left">
-              <div class="level-item">
-                <p class="subtitle is-5">
+            <div className="level-left">
+              <div className="level-item">
+                <p className="subtitle is-5">
                   <strong>All</strong> trips{" "}
                   <span className="icon">
                     <i className="fas fa-chevron-right"></i>
                   </span>
                 </p>
               </div>
-              <div class="level-item">
-                <button class="button is-primary" onClick={this.toggleModal}>
+              <div className="level-item">
+                <button
+                  className="button is-primary"
+                  onClick={this.toggleModal}
+                >
                   Add a new trip
                 </button>
               </div>
@@ -104,8 +104,8 @@ export default class Dashboard extends Component {
           <NewTrip toggleModal={this.toggleModal} addTrip={this.addTrip} />
         )}
         {this.state.err && (
-          <article class="message is-error">
-            <div class="message-body">{this.state.err}</div>
+          <article className="message is-error">
+            <div className="message-body">{this.state.err}</div>
           </article>
         )}
       </section>

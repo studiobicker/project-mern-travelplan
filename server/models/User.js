@@ -28,10 +28,10 @@ const userSchema = new Schema({
       "https://res.cloudinary.com/drs7qiyrp/image/upload/v1576188722/travelAppAuth/avatar_a0uiq8.jpg"
   },
   currentTripId: { type: String },
-  memberships: [
+  trips: [
     {
       type: Schema.ObjectId,
-      ref: "Membership"
+      ref: "Trip"
     }
   ]
 });

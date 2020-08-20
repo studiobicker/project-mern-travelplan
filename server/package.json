@@ -10,7 +10,7 @@
     "deploy": "rimraf build && cd ../client && npm run build && mv build ../server/ && cd .. && git subtree push --prefix server heroku master"
   },
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "cloudinary": "^1.17.0",
     "connect-mongo": "^3.1.2",
     "cookie-parser": "~1.4.4",
